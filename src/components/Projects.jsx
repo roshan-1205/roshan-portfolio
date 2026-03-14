@@ -21,7 +21,7 @@ const Projects = () => {
     {
       title: 'VAANI',
       description: 'Voice-first AI civic platform with multilingual assistant',
-      image: 'https://drive.google.com/file/d/15pzlf2H8nu3Df-r18RwIgQCkfdCjqA-c/view?usp=drive_link',
+      image: 'https://res.cloudinary.com/dptci2jft/image/upload/v1773487312/vaani-logo_xmogqf.png',
       tech: ['React', 'AI/ML', 'Voice API', 'NLP'],
       github: 'https://github.com/roshan-1205/VAANI',
       demo: 'https://vaani-ai-assistant-419de.web.app',

@@ -30,7 +30,7 @@ const Footer = () => {
               className="inline-block mb-4"
             >
               <img
-                src="/src/assets/mylogo.png"
+                src="https://res.cloudinary.com/dptci2jft/image/upload/v1773487313/mylogo_cwszst.png"
                 alt="Roshan Kumar Singh"
                 className="h-10 w-auto object-contain brightness-0 invert"
               />

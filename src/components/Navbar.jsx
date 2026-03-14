@@ -38,8 +38,7 @@ const Navbar = () => {
             className="flex items-center"
           >
             <img
-              // src="/src/assets/mylogo.png"/
-              src="https://drive.google.com/file/d/1SJKfxetmHVg7X3W_AdQQ-jVTh5uI3s6n/view?usp=drive_link"
+              src="https://res.cloudinary.com/dptci2jft/image/upload/v1773487313/mylogo_cwszst.png"
               alt="Roshan Kumar Singh"
               className="h-14 w-auto object-contain"
             />

@@ -87,8 +87,7 @@ const Hero = () => {
               >
                 <div className="bg-background rounded-[2.5rem] p-3">
                   <img
-                    // src="/src/assets/my-pic.png"
-                    src="https://drive.google.com/file/d/1PWz0W_zxRZYAZxa00QVaPTnu4w0-pXQW/view?usp=drive_link"
+                    src="https://res.cloudinary.com/dptci2jft/image/upload/v1773487910/my-pic_xsuwym.jpg"
                     alt="Roshan Kumar Singh"
                     className="w-full h-auto rounded-[2rem] object-cover shadow-xl"
                     style={{ aspectRatio: '3/4', maxHeight: '500px' }}
