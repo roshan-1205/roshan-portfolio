@@ -60,7 +60,8 @@ const About = () => {
               >
                 <div className="bg-background rounded-[2.5rem] p-3">
                   <img
-                    src="/src/assets/mypic.jpeg"
+                    // src="/src/assets/mypic.jpeg"
+                    src="https://drive.google.com/file/d/1Lm5Bm13M2h7ZVPPqgGVBXF5ILSkD-MLB/view?usp=drive_link"
                     alt="Roshan Kumar Singh"
                     className="w-full h-auto rounded-[2rem] object-cover shadow-xl"
                     style={{ aspectRatio: '3/4', maxHeight: '500px' }}
