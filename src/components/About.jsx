@@ -15,7 +15,7 @@ const About = () => {
     },
     {
       icon: <Code2 size={32} />,
-      title: 'Full Stack Developer',
+      title: 'MERN Stack Developer',
       description: 'End-to-end web application development',
     },
     {
