@@ -7,10 +7,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#F2EAF7',
-        lightAccent: '#C59DD9',
-        primaryAccent: '#7A3F91',
-        darkText: '#2B0D3E',
+        background: '#F5F6F7',
+        lightAccent: '#C1C4C8',
+        primaryAccent: '#7B7F85',
+        darkText: '#2B2E33',
       },
       maxWidth: {
         container: '1200px',
