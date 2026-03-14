@@ -63,7 +63,7 @@ const Navbar = () => {
               download="Roshan_Kumar_Singh_Resume.pdf"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-6 py-2 bg-primaryAccent text-darkText rounded-full font-medium hover:bg-lightAccent transition-colors"
+              className="px-6 py-2 bg-[#C1C4C8] text-[#2B2E33] rounded-full font-medium hover:bg-[#2B2E33] hover:text-[#C1C4C8] transition-colors"
             >
               Resume
             </motion.a>
@@ -99,7 +99,7 @@ const Navbar = () => {
             <a
               href="/resume.pdf"
               download="Roshan_Kumar_Singh_Resume.pdf"
-              className="block px-6 py-2 bg-primaryAccent text-darkText rounded-full font-medium text-center"
+              className="block px-6 py-2 bg-[#C1C4C8] text-[#2B2E33] rounded-full font-medium text-center hover:bg-[#2B2E33] hover:text-[#C1C4C8] transition-colors"
             >
               Resume
             </a>
