@@ -12,7 +12,7 @@ const Projects = () => {
     {
       title: 'HamariBeti',
       description: 'Women safety platform with Aadhaar verification and SOS alerts',
-      image: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=800&h=600&fit=crop',
+      image: 'https://res.cloudinary.com/dptci2jft/image/upload/v1773515455/mylogo_j4lel7.png',
       tech: ['React', 'Node.js', 'MongoDB', 'Aadhaar API'],
       github: 'https://github.com',
       demo: 'https://demo.com',
@@ -30,10 +30,10 @@ const Projects = () => {
     {
       title: 'Portfolio Website',
       description: 'Modern developer portfolio with 3D animations',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop',
+      image: 'https://res.cloudinary.com/dptci2jft/image/upload/v1773515455/mylogo_j4lel7.png',
       tech: ['React', 'Three.js', 'Framer Motion', 'Tailwind'],
-      github: 'https://github.com',
-      demo: 'https://demo.com',
+      github: 'https://github.com/roshan-1205/roshan-portfolio',
+      demo: 'https://roshan-portfolio-indol.vercel.app/',
       details: 'A premium portfolio website featuring 3D interactive elements, smooth animations, and modern UI/UX design principles.',
     },
   ];
