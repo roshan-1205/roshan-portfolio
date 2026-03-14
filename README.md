@@ -117,10 +117,10 @@ roshan-portfolio/
 ## 🎨 Color Palette
 
 ```css
-Background:      #FFF8E7  /* Warm cream */
-Light Accent:    #FFD77A  /* Soft gold */
-Primary Accent:  #E6A520  /* Rich gold */
-Dark Text:       #7A4A00  /* Deep brown */
+Background:      #F2EAF7  /* Light lavender */
+Light Accent:    #C59DD9  /* Soft purple */
+Primary Accent:  #7A3F91  /* Rich purple */
+Dark Text:       #2B0D3E  /* Deep purple */
 ```
 
 ## ⌨️ Keyboard Shortcuts
