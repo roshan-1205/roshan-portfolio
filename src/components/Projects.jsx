@@ -12,7 +12,7 @@ const Projects = () => {
     {
       title: 'HamariBeti',
       description: 'Women safety platform with Aadhaar verification and SOS alerts',
-      image: 'https://res.cloudinary.com/dptci2jft/image/upload/v1773515455/mylogo_j4lel7.png',
+      image: 'https://res.cloudinary.com/dptci2jft/image/upload/v1773565897/1000031284_qh8ffo.png',
       tech: ['React', 'Node.js', 'MongoDB', 'Aadhaar API'],
       github: 'https://github.com',
       demo: 'https://demo.com',
