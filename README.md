@@ -9,7 +9,7 @@ A modern, premium developer portfolio showcasing my work as a MERN Stack Develop
 
 ## 🌟 Live Demo
 
-Visit my portfolio: **[https://roshan-portfolio-indol.vercel.app/](https://vaani-ai-assistant-419de.web.app)**
+Visit my portfolio: **[https://roshan-portfolio-indol.vercel.app/](https://roshan-portfolio-indol.vercel.app)**
 
 ## ✨ Features
 
