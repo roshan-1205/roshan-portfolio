@@ -30,9 +30,9 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen" style={{ position: 'relative' }}>
       <AnimatedBackground />
-      <div className="relative z-10 bg-gradient-to-br from-background/60 via-background/40 to-background/60 backdrop-blur-sm">
+      <div className="relative z-10 bg-gradient-to-br from-background/60 via-background/40 to-background/60 backdrop-blur-sm" style={{ position: 'relative' }}>
         <ScrollProgress />
         <Navbar />
         <Hero />
