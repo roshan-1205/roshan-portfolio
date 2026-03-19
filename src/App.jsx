@@ -10,6 +10,7 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CommandPalette from './components/CommandPalette';
 import ScrollProgress from './components/ScrollProgress';
+import AnimatedBackground from './components/AnimatedBackground';
 
 function App() {
   useEffect(() => {
@@ -29,18 +30,21 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
-      <ScrollProgress />
-      <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Timeline />
-      <Certificates />
-      <Contact />
-      <Footer />
-      <CommandPalette />
+    <div className="min-h-screen relative">
+      <AnimatedBackground />
+      <div className="relative z-10 bg-gradient-to-br from-background/60 via-background/40 to-background/60 backdrop-blur-sm">
+        <ScrollProgress />
+        <Navbar />
+        <Hero />
+        <About />
+        <Skills />
+        <Projects />
+        <Timeline />
+        <Certificates />
+        <Contact />
+        <Footer />
+        <CommandPalette />
+      </div>
     </div>
   );
 }
