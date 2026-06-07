@@ -11,14 +11,14 @@ export function SectionLabel({ label }: SectionLabelProps) {
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-10%" }}
-      className="mb-4 flex items-center gap-4"
+      viewport={{ once: true, margin: "-5%" }}
+      className="mb-6"
     >
-      <span className="font-mono-ui text-xs tracking-[0.3em] text-cyan uppercase">
+      <span className="block w-fit font-mono-ui text-[11px] leading-relaxed tracking-[0.22em] text-cyan uppercase sm:text-xs sm:tracking-[0.28em]">
         {label}
       </span>
       <motion.div
-        className="h-px flex-1 max-w-24 bg-gradient-to-r from-cyan/60 to-transparent"
+        className="mt-3 h-px w-24 bg-gradient-to-r from-cyan/70 to-transparent"
         initial={{ scaleX: 0 }}
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}

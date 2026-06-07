@@ -1,3 +1,6 @@
+import type { Certification } from "@/types/certificate"
+import type { FeaturedProject } from "@/types/project"
+
 export const personal = {
   name: "Roshan Kumar Singh",
   mission:
@@ -10,7 +13,8 @@ export const personal = {
   location: "India",
   status:
     "Open to full-time roles, freelance, consulting, startup collaboration, speaking & strategic partnerships",
-  cvUrl: "/cv.pdf",
+  cvUrl: "/Roshan-Kumar-Singh-CV.pdf",
+  cvFileName: "Roshan-Kumar-Singh-CV.pdf",
 }
 
 export const navLinks = [
@@ -102,8 +106,9 @@ export const skillCategories = [
   },
 ]
 
-export const featuredProjects = [
+export const featuredProjects: FeaturedProject[] = [
   {
+    id: "vaani",
     number: "01",
     category: "AI · VOICE · CIVIC TECH · 2026",
     title: "VAANI — AI-Powered Civic Engagement",
@@ -130,6 +135,7 @@ export const featuredProjects = [
     githubUrl: "https://github.com/roshan-1205/VAANI",
   },
   {
+    id: "vibely",
     number: "02",
     category: "SOCIAL MEDIA · REAL-TIME · 2026",
     title: "Vibely — Modern Social Platform",
@@ -156,6 +162,7 @@ export const featuredProjects = [
     githubUrl: "https://github.com/roshan-1205/VIBELY",
   },
   {
+    id: "pharmily",
     number: "03",
     category: "HEALTHCARE · FULL STACK · 2026",
     title: "PHARMILY — Healthcare Management System",
@@ -183,6 +190,7 @@ export const featuredProjects = [
     githubUrl: "https://github.com/roshan-1205/PHARMILY",
   },
   {
+    id: "fleetwatch",
     number: "04",
     category: "AI · ML · HACKATHON · 2026",
     title: "FleetWatch — AI Fleet Fraud Detection",
@@ -209,6 +217,7 @@ export const featuredProjects = [
     githubUrl: "https://github.com/roshan-1205/FleetWatch",
   },
   {
+    id: "aks-beauty-hut",
     number: "05",
     category: "E-COMMERCE · FULL STACK · 2026",
     title: "AKS Beauty Hut — E-Commerce Website",
@@ -270,8 +279,9 @@ export const timeline = [
   },
 ]
 
-export const certifications = [
+export const certifications: Certification[] = [
   {
+    id: "web-development",
     title: "Web Development",
     issuer: "AKS University",
     instructor: "Mr. Anurag Garg",
@@ -280,13 +290,14 @@ export const certifications = [
     skills: ["HTML", "CSS", "JavaScript", "React.js", "MongoDB"],
   },
   {
+    id: "software-developer-it-ites",
     title: "Software Developer (IT-ITES Sector)",
     issuer: "Skill India Mission (PMKVY)",
     instructor: "Sindhu Gangadharan",
     year: "2025",
     credential: "UC-XXXXXXXXXX",
     skills: ["Software Development"],
-  }
+  },
 ]
 
 export const marqueeText = [

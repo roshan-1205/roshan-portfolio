@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { ArrowDown, Download } from "lucide-react"
+import { Download } from "lucide-react"
 import { HeroRobotGuide } from "@/components/avatar/HeroRobotGuide"
 import { personal } from "@/data/portfolio"
 import { Starfield } from "@/components/effects/Starfield"
@@ -67,7 +67,12 @@ export function HeroSection() {
               size="lg"
               className="h-12 border-border/50 px-8 font-mono-ui text-xs tracking-widest uppercase"
             >
-              <a href={personal.cvUrl} download>
+              <a
+                href={personal.cvUrl}
+                download={personal.cvFileName}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Download className="mr-2 size-4" />
                 Download CV
               </a>
@@ -76,22 +81,6 @@ export function HeroSection() {
         </div>
       </div>
 
-      <motion.div
-        className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3.5, duration: 1 }}
-      >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <ArrowDown className="size-5 text-muted-foreground" />
-        </motion.div>
-        <span className="font-mono-ui text-[10px] tracking-[0.3em] text-muted-foreground uppercase">
-          Scroll to Explore
-        </span>
-      </motion.div>
     </section>
   )
 }

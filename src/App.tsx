@@ -1,4 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { PortfolioSkeleton } from "@/components/layout/PortfolioSkeleton"
 import { Preloader } from "@/components/layout/Preloader"
 import { Navigation } from "@/components/layout/Navigation"
 import { ScrollProgress } from "@/components/layout/ScrollProgress"
@@ -12,21 +13,36 @@ import { AchievementsSection } from "@/components/sections/AchievementsSection"
 import { ContactSection } from "@/components/sections/ContactSection"
 import { FooterSection } from "@/components/sections/FooterSection"
 
+type LoadPhase = "preloader" | "skeleton" | "ready"
+
 function App() {
-  const [loaded, setLoaded] = useState(false)
+  const [phase, setPhase] = useState<LoadPhase>("preloader")
+
+  useEffect(() => {
+    if (phase !== "skeleton") return
+
+    const timer = window.setTimeout(() => setPhase("ready"), 1100)
+    return () => window.clearTimeout(timer)
+  }, [phase])
+
+  const ready = phase === "ready"
 
   return (
     <>
-      {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
+      {phase === "preloader" && (
+        <Preloader onComplete={() => setPhase("skeleton")} />
+      )}
+
+      <PortfolioSkeleton visible={phase === "skeleton"} />
 
       <FilmGrain />
       <ScrollProgress />
       <Letterbox />
-      {loaded && <Navigation />}
+      {ready && <Navigation />}
 
       <main
         className={
-          loaded
+          ready
             ? "opacity-100 transition-opacity duration-700"
             : "pointer-events-none opacity-0"
         }

@@ -1,56 +1,88 @@
 import { motion } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
-import { Bot, Volume2, VolumeX } from "lucide-react"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Bot, Play, Volume2, VolumeX } from "lucide-react"
 import { avatarIntro } from "@/data/avatar-intro"
 import { RoboticAvatarPresenter } from "@/components/avatar/RoboticAvatarPresenter"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import { useRobotVoice } from "@/hooks/useRobotVoice"
+import { useTypewriter } from "@/hooks/useTypewriter"
 import { easeFilm } from "@/lib/animations"
 
 export function HeroRobotGuide() {
   const reducedMotion = useReducedMotion()
-  const { speak, stop, speaking, voiceReady } = useRobotVoice()
+  const { speak, stop, speaking, voiceReady, speechSupported, primeSpeech } =
+    useRobotVoice()
+
   const [lineIndex, setLineIndex] = useState(0)
-  const [started, setStarted] = useState(false)
-  const [displayText, setDisplayText] = useState("Booting introduction protocol...")
+  const [introStarted, setIntroStarted] = useState(false)
+  const [audioUnlocked, setAudioUnlocked] = useState(false)
+  const [displayText, setDisplayText] = useState("")
   const [muted, setMuted] = useState(false)
   const [voiceReplay, setVoiceReplay] = useState(0)
   const spokeRef = useRef(-1)
 
   const currentLine = avatarIntro.lines[lineIndex] ?? ""
+  const useVoice = introStarted && !muted && !reducedMotion && speechSupported
+
+  const { displayed: typedText, done: typewriterDone } = useTypewriter({
+    text: currentLine,
+    speed: 42,
+    startDelay: introStarted ? 200 : 0,
+    enabled: introStarted && !useVoice,
+  })
+
+  const visibleText = useVoice ? displayText : typedText
+
+  const startIntro = useCallback(async () => {
+    if (introStarted) return
+    await primeSpeech()
+    setAudioUnlocked(true)
+    setIntroStarted(true)
+    setLineIndex(0)
+    setDisplayText("")
+    spokeRef.current = -1
+  }, [introStarted, primeSpeech])
+
+  const replayIntro = useCallback(async () => {
+    stop()
+    await primeSpeech()
+    setAudioUnlocked(true)
+    setIntroStarted(true)
+    setLineIndex(0)
+    setDisplayText("")
+    spokeRef.current = -1
+    setVoiceReplay((n) => n + 1)
+  }, [primeSpeech, stop])
 
   useEffect(() => {
-    const timer = setTimeout(() => setStarted(true), 900)
-    return () => clearTimeout(timer)
-  }, [])
-
-  useEffect(() => {
-    if (!started || muted || reducedMotion) return
+    if (!introStarted || !useVoice) return
     if (spokeRef.current === lineIndex) return
     spokeRef.current = lineIndex
 
-    setDisplayText(currentLine)
+    setDisplayText("")
 
-    speak(currentLine, {
+    void speak(currentLine, {
+      onProgress: (text) => setDisplayText(text),
       onEnd: () => {
+        setDisplayText(currentLine)
         if (lineIndex < avatarIntro.lines.length - 1) {
-          setTimeout(() => setLineIndex((i) => i + 1), 500)
+          setTimeout(() => setLineIndex((i) => i + 1), 450)
         }
       },
     })
-  }, [started, lineIndex, currentLine, speak, muted, reducedMotion, voiceReplay])
+  }, [introStarted, lineIndex, currentLine, speak, useVoice, voiceReplay])
 
   useEffect(() => {
-    if (!started || !reducedMotion) return
-    setDisplayText(currentLine)
+    if (!introStarted || useVoice) return
+    if (!typewriterDone) return
     if (lineIndex >= avatarIntro.lines.length - 1) return
-    const timer = setTimeout(() => setLineIndex((i) => i + 1), 3200)
+    const timer = setTimeout(() => setLineIndex((i) => i + 1), reducedMotion ? 2200 : 900)
     return () => clearTimeout(timer)
-  }, [lineIndex, reducedMotion, started, currentLine])
+  }, [typewriterDone, lineIndex, introStarted, useVoice, reducedMotion])
 
   useEffect(() => () => stop(), [stop])
 
-  const isTalking = speaking && !muted && !reducedMotion
+  const isTalking = useVoice ? speaking : introStarted && !typewriterDone && !reducedMotion
 
   return (
     <motion.div
@@ -92,7 +124,7 @@ export function HeroRobotGuide() {
           <RoboticAvatarPresenter
             speaking={isTalking}
             lineIndex={lineIndex}
-            charProgress={displayText.length}
+            charProgress={visibleText.length}
             className="w-full"
           />
         </motion.div>
@@ -105,48 +137,97 @@ export function HeroRobotGuide() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.55, ease: easeFilm }}
         >
-          <div className="mb-3 flex items-center justify-between gap-2">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2 font-mono-ui text-[10px] tracking-[0.3em] text-cyan uppercase">
               <Volume2 className="size-3.5" />
-              {isTalking
-                ? "Speaking now"
-                : voiceReady
-                  ? "Male voice · ready"
-                  : "Loading voice"}
+              {!introStarted
+                ? "Tap play to start"
+                : isTalking
+                  ? "Speaking now"
+                  : muted
+                    ? "Muted · text only"
+                    : voiceReady
+                      ? "Voice synced"
+                      : "Loading voice"}
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                if (muted) {
-                  setMuted(false)
-                  spokeRef.current = -1
-                  setVoiceReplay((n) => n + 1)
-                } else {
-                  setMuted(true)
-                  stop()
-                }
-              }}
-              className="flex items-center gap-1.5 rounded-md border border-border/40 px-2.5 py-1 font-mono-ui text-[9px] tracking-wider text-muted-foreground uppercase transition-colors hover:border-cyan/30 hover:text-cyan"
-              aria-label={muted ? "Unmute robot voice" : "Mute robot voice"}
-            >
-              {muted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
-              {muted ? "Unmute" : "Mute"}
-            </button>
+
+            <div className="flex items-center gap-2">
+              {!introStarted ? (
+                <button
+                  type="button"
+                  onClick={() => void startIntro()}
+                  className="flex items-center gap-1.5 rounded-md border border-cyan/40 bg-cyan/10 px-3 py-1.5 font-mono-ui text-[9px] tracking-wider text-cyan uppercase transition-colors hover:bg-cyan/20"
+                  aria-label="Play voice introduction"
+                >
+                  <Play className="size-3.5" />
+                  Play intro
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => void replayIntro()}
+                  className="rounded-md border border-border/40 px-2.5 py-1 font-mono-ui text-[9px] tracking-wider text-muted-foreground uppercase transition-colors hover:border-cyan/30 hover:text-cyan"
+                  aria-label="Replay introduction"
+                >
+                  Replay
+                </button>
+              )}
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (muted) {
+                    setMuted(false)
+                    if (introStarted) {
+                      spokeRef.current = -1
+                      setVoiceReplay((n) => n + 1)
+                    }
+                  } else {
+                    setMuted(true)
+                    stop()
+                  }
+                }}
+                className="flex items-center gap-1.5 rounded-md border border-border/40 px-2.5 py-1 font-mono-ui text-[9px] tracking-wider text-muted-foreground uppercase transition-colors hover:border-cyan/30 hover:text-cyan"
+                aria-label={muted ? "Unmute robot voice" : "Mute robot voice"}
+              >
+                {muted ? <VolumeX className="size-3.5" /> : <Volume2 className="size-3.5" />}
+                {muted ? "Unmute" : "Mute"}
+              </button>
+            </div>
           </div>
 
           <div className="relative rounded-xl border border-cyan/25 bg-card/80 p-5 shadow-[inset_0_1px_0_rgba(0,212,255,0.06)] backdrop-blur-md md:p-6">
             <div className="pointer-events-none absolute top-1/2 -left-1.5 hidden size-3 -translate-y-1/2 rotate-45 border-b border-l border-cyan/25 bg-card/80 lg:block" />
 
-            <p className="min-h-[4.5rem] font-display text-lg leading-relaxed text-foreground md:text-xl">
-              {displayText}
-              {isTalking && (
-                <motion.span
-                  className="ml-0.5 inline-block h-4 w-0.5 bg-cyan align-middle"
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 0.7, repeat: Infinity }}
-                />
+            <p
+              className="min-h-[4.5rem] font-display text-lg leading-relaxed text-foreground md:text-xl"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {!introStarted ? (
+                <span className="text-muted-foreground">
+                  Press <span className="text-cyan">Play intro</span> — voice and
+                  subtitles stay in sync on mobile, tablet, and desktop.
+                </span>
+              ) : (
+                <>
+                  {visibleText || "\u00A0"}
+                  {isTalking && (
+                    <motion.span
+                      className="ml-0.5 inline-block h-4 w-0.5 bg-cyan align-middle"
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 0.7, repeat: Infinity }}
+                    />
+                  )}
+                </>
               )}
             </p>
+
+            {!audioUnlocked && introStarted && (
+              <p className="mt-2 font-mono-ui text-[9px] tracking-wide text-muted-foreground">
+                Voice uses your device&apos;s built-in speech engine — no download required.
+              </p>
+            )}
 
             <div className="mt-5 flex items-center justify-between gap-3 border-t border-border/30 pt-4">
               <div className="flex gap-1.5">
@@ -164,8 +245,9 @@ export function HeroRobotGuide() {
                 ))}
               </div>
               <span className="font-mono-ui text-[10px] text-muted-foreground">
-                {Math.min(lineIndex + 1, avatarIntro.lines.length)}/
-                {avatarIntro.lines.length}
+                {introStarted
+                  ? `${Math.min(lineIndex + 1, avatarIntro.lines.length)}/${avatarIntro.lines.length}`
+                  : `0/${avatarIntro.lines.length}`}
               </span>
             </div>
           </div>

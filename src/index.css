@@ -77,7 +77,19 @@
   }
 
   .section-angled {
-    clip-path: polygon(0 3%, 100% 0, 100% 97%, 0 100%);
+    /* Bottom angle only — top stays flat so section labels are not clipped */
+    clip-path: polygon(0 0, 100% 0, 100% 97%, 0 100%);
+  }
+
+  @media (max-width: 639px) {
+    .section-angled {
+      clip-path: none;
+    }
+
+    #contact .contact-form-panel {
+      clip-path: none !important;
+      transform: none !important;
+    }
   }
 
   .film-grain {
@@ -183,6 +195,125 @@
       rgba(123, 47, 247, 0.08) 85%,
       rgba(0, 0, 0, 0.15) 100%
     );
+  }
+
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 212, 255, 0.08) 45%,
+      rgba(123, 47, 247, 0.12) 55%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.8s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(120%);
+    }
+  }
+
+  .scan-grid {
+    background-image:
+      linear-gradient(rgba(0, 212, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 212, 255, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 85%);
+  }
+
+  .scan-line-h {
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(0, 212, 255, 0.15) 20%,
+      rgba(0, 212, 255, 0.95) 50%,
+      rgba(123, 47, 247, 0.8) 80%,
+      transparent
+    );
+    box-shadow:
+      0 0 20px rgba(0, 212, 255, 0.6),
+      0 0 60px rgba(0, 212, 255, 0.25);
+  }
+
+  .scan-line-v {
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(0, 212, 255, 0.2) 25%,
+      rgba(0, 212, 255, 0.85) 50%,
+      rgba(123, 47, 247, 0.6) 75%,
+      transparent
+    );
+    box-shadow:
+      0 0 16px rgba(0, 212, 255, 0.5),
+      0 0 40px rgba(0, 212, 255, 0.2);
+  }
+
+  .scan-corner {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-color: rgba(0, 212, 255, 0.45);
+    animation: scan-corner-pulse 2.4s ease-in-out infinite;
+  }
+
+  .scan-corner-tl {
+    top: 24px;
+    left: 24px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .scan-corner-tr {
+    top: 24px;
+    right: 24px;
+    border-top: 1px solid;
+    border-right: 1px solid;
+  }
+
+  .scan-corner-bl {
+    bottom: 24px;
+    left: 24px;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .scan-corner-br {
+    right: 24px;
+    bottom: 24px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+
+  @keyframes scan-corner-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
+  .scan-progress-bar {
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.55);
+  }
+
+  .scan-radar-sweep {
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      transparent 300deg,
+      rgba(0, 212, 255, 0.35) 330deg,
+      rgba(0, 212, 255, 0.15) 360deg
+    );
+    mask: radial-gradient(circle, transparent 55%, black 56%);
   }
 }
 
