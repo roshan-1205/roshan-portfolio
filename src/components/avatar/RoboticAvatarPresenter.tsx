@@ -96,7 +96,7 @@ export function RoboticAvatarPresenter({
         <div className="flex items-center justify-center gap-3 border-t border-cyan/10 bg-background/30 px-4 py-2">
           <span className="size-1 rounded-full bg-purple/60" />
           <span className="font-mono-ui text-[9px] tracking-[0.3em] text-muted-foreground uppercase">
-            Spline 3D · Voice Guide
+            Roshan Kumar Singh
           </span>
           <span className="size-1 rounded-full bg-cyan/60" />
         </div>
