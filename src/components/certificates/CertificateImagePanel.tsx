@@ -1,8 +1,11 @@
 import { useRef } from "react"
 import { Award, ImagePlus, Loader2, Trash2, Upload } from "lucide-react"
 import { useCertificateImage } from "@/hooks/useCertificateImage"
+import { isCloudinaryConfigured } from "@/lib/cloudinary-config"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const cloudinaryReady = isCloudinaryConfigured()
 
 type CertificateImagePanelProps = {
   certificateId: string
@@ -70,11 +73,17 @@ export function CertificateImagePanel({
           aria-label={`Upload certificate photo for ${title}`}
         />
 
+        {!cloudinaryReady && (
+          <p className="max-w-[220px] rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1.5 text-center font-mono-ui text-[8px] leading-snug text-amber-200 sm:text-[9px]">
+            Set VITE_CLOUDINARY_CLOUD_NAME in .env.local + preset portfolio_unsigned
+          </p>
+        )}
+
         <Button
           type="button"
           size="sm"
           className="font-mono-ui text-[10px] tracking-wider uppercase sm:text-xs"
-          disabled={isUploading}
+          disabled={isUploading || !cloudinaryReady}
           onClick={() => inputRef.current?.click()}
         >
           {isUploading ? (
@@ -109,7 +118,7 @@ export function CertificateImagePanel({
       </div>
 
       {error && (
-        <div className="absolute inset-x-0 bottom-0 bg-destructive/90 px-2 py-2 text-center text-[10px] text-white sm:text-xs">
+        <div className="absolute inset-x-0 bottom-0 max-h-24 overflow-y-auto bg-destructive/95 px-2 py-2 text-center text-[10px] leading-snug break-words text-white sm:text-xs">
           {error}
         </div>
       )}

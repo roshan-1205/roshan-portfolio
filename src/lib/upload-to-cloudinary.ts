@@ -1,19 +1,10 @@
+import { getCloudinaryClientConfig } from "@/lib/cloudinary-config"
+
 export type UploadFolder = "portfolio-projects" | "portfolio-certificates"
 
-function fileToDataUri(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = () => reject(new Error("Failed to read file"))
-    reader.readAsDataURL(file)
-  })
-}
+type UploadResult = { url: string; publicId: string }
 
-export async function uploadImageToCloudinary(
-  file: File,
-  assetId: string,
-  folder: UploadFolder = "portfolio-projects",
-): Promise<{ url: string; publicId: string }> {
+function validateFile(file: File) {
   if (!file.type.startsWith("image/")) {
     throw new Error("Please select an image file (PNG, JPG, WebP, etc.)")
   }
@@ -21,8 +12,87 @@ export async function uploadImageToCloudinary(
   if (file.size > 10 * 1024 * 1024) {
     throw new Error("Image must be smaller than 10 MB")
   }
+}
 
-  const image = await fileToDataUri(file)
+async function parseJsonResponse(response: Response) {
+  const text = await response.text()
+
+  try {
+    return JSON.parse(text) as Record<string, unknown>
+  } catch {
+    if (text.includes("<!DOCTYPE") || text.includes("<html")) {
+      throw new Error(
+        "Upload API unavailable. Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in .env.local",
+      )
+    }
+    throw new Error("Unexpected upload response.")
+  }
+}
+
+async function uploadDirectToCloudinary(
+  file: File,
+  assetId: string,
+  folder: UploadFolder,
+): Promise<UploadResult> {
+  const { cloudName, uploadPreset } = getCloudinaryClientConfig()
+
+  if (!cloudName || !uploadPreset) {
+    throw new Error(
+      "Cloudinary not configured. Add VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET to .env.local",
+    )
+  }
+
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("upload_preset", uploadPreset)
+  formData.append("folder", folder)
+  formData.append("public_id", assetId)
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    { method: "POST", body: formData },
+  )
+
+  const payload = await parseJsonResponse(response)
+  const error = payload.error as { message?: string } | string | undefined
+  const errorMessage =
+    typeof error === "string"
+      ? error
+      : error?.message ||
+        (payload.message as string | undefined) ||
+        "Cloudinary upload failed"
+
+  if (!response.ok || !payload.secure_url) {
+    if (errorMessage.toLowerCase().includes("cloud_name")) {
+      throw new Error(
+        `Invalid Cloudinary cloud name "${cloudName}". Copy the exact value from console.cloudinary.com → Settings → API Keys.`,
+      )
+    }
+    if (errorMessage.toLowerCase().includes("upload preset")) {
+      throw new Error(
+        `Upload preset "${uploadPreset}" not found. Create an Unsigned preset in Cloudinary → Settings → Upload → Upload presets.`,
+      )
+    }
+    throw new Error(errorMessage)
+  }
+
+  return {
+    url: payload.secure_url as string,
+    publicId: payload.public_id as string,
+  }
+}
+
+async function uploadViaServer(
+  file: File,
+  assetId: string,
+  folder: UploadFolder,
+): Promise<UploadResult> {
+  const image = await new Promise<string>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = () => reject(new Error("Failed to read file"))
+    reader.readAsDataURL(file)
+  })
 
   const response = await fetch("/api/upload", {
     method: "POST",
@@ -30,20 +100,36 @@ export async function uploadImageToCloudinary(
     body: JSON.stringify({ image, assetId, folder }),
   })
 
-  const text = await response.text()
-  let payload: { url?: string; publicId?: string; error?: string } = {}
-
-  try {
-    payload = JSON.parse(text) as typeof payload
-  } catch {
-    throw new Error("Upload failed. Check Cloudinary env vars.")
-  }
+  const payload = await parseJsonResponse(response)
 
   if (!response.ok || !payload.url || !payload.publicId) {
-    throw new Error(payload.error || "Upload failed. Check Cloudinary env vars.")
+    const err =
+      (payload.error as string | undefined) ||
+      (payload.message as string | undefined) ||
+      "Server upload failed. Use VITE_CLOUDINARY_* vars for direct upload."
+    throw new Error(err)
   }
 
-  return { url: payload.url, publicId: payload.publicId }
+  return {
+    url: payload.url as string,
+    publicId: payload.publicId as string,
+  }
+}
+
+export async function uploadImageToCloudinary(
+  file: File,
+  assetId: string,
+  folder: UploadFolder = "portfolio-projects",
+): Promise<UploadResult> {
+  validateFile(file)
+
+  const { cloudName, uploadPreset } = getCloudinaryClientConfig()
+
+  if (cloudName && uploadPreset) {
+    return uploadDirectToCloudinary(file, assetId, folder)
+  }
+
+  return uploadViaServer(file, assetId, folder)
 }
 
 /** @deprecated Use uploadImageToCloudinary */

@@ -38,6 +38,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json(result)
   } catch (error) {
     console.error("Cloudinary upload failed:", error)
-    return res.status(500).json({ error: "Upload failed" })
+    const message =
+      error instanceof Error ? error.message : "Upload failed"
+    return res.status(500).json({ error: message })
   }
 }

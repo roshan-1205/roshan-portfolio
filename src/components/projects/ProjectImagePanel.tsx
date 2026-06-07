@@ -1,8 +1,11 @@
 import { useRef } from "react"
 import { ImagePlus, Loader2, Trash2, Upload } from "lucide-react"
 import { useProjectImage } from "@/hooks/useProjectImage"
+import { isCloudinaryConfigured } from "@/lib/cloudinary-config"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+
+const cloudinaryReady = isCloudinaryConfigured()
 
 type ProjectImagePanelProps = {
   projectId: string
@@ -77,11 +80,18 @@ export function ProjectImagePanel({
           aria-label={`Upload image for ${title}`}
         />
 
+        {!cloudinaryReady && (
+          <p className="max-w-[240px] rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1.5 text-center font-mono-ui text-[9px] leading-snug text-amber-200">
+            Set VITE_CLOUDINARY_CLOUD_NAME in .env.local (not &quot;Portfolio&quot;) + unsigned preset
+            portfolio_unsigned
+          </p>
+        )}
+
         <Button
           type="button"
           size="sm"
           className="font-mono-ui text-xs tracking-wider uppercase"
-          disabled={isUploading}
+          disabled={isUploading || !cloudinaryReady}
           onClick={() => inputRef.current?.click()}
         >
           {isUploading ? (
@@ -116,7 +126,7 @@ export function ProjectImagePanel({
       </div>
 
       {error && (
-        <div className="absolute inset-x-0 bottom-0 bg-destructive/90 px-3 py-2 text-center text-xs text-white">
+        <div className="absolute inset-x-0 bottom-0 max-h-24 overflow-y-auto bg-destructive/95 px-3 py-2 text-center text-[10px] leading-snug break-words text-white sm:text-xs">
           {error}
         </div>
       )}

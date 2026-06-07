@@ -118,7 +118,14 @@ function devApiRoutes(): Plugin {
             console.error("Cloudinary upload failed:", error)
             res.statusCode = 500
             res.setHeader("Content-Type", "application/json")
-            res.end(JSON.stringify({ error: "Upload failed" }))
+            res.end(
+              JSON.stringify({
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : "Upload failed",
+              }),
+            )
           }
         })
       })
