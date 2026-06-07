@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useState } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { ScanOverlay } from "@/components/effects/ScanOverlay"
 import { easeFilm } from "@/lib/animations"
@@ -8,6 +9,34 @@ type PortfolioSkeletonProps = {
 }
 
 export function PortfolioSkeleton({ visible }: PortfolioSkeletonProps) {
+  const [progress, setProgress] = useState(92)
+
+  useEffect(() => {
+    if (!visible) {
+      setProgress(92)
+      return
+    }
+
+    const duration = 1000
+    const start = performance.now()
+    let frameId = 0
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration)
+      const next = 92 + t * 8
+      setProgress(next)
+
+      if (t < 1) {
+        frameId = requestAnimationFrame(tick)
+      } else {
+        setProgress(100)
+      }
+    }
+
+    frameId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frameId)
+  }, [visible])
+
   return (
     <AnimatePresence>
       {visible && (
@@ -19,7 +48,7 @@ export function PortfolioSkeleton({ visible }: PortfolioSkeletonProps) {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4, ease: easeFilm }}
         >
-          <ScanOverlay progress={88} status="RENDERING LAYOUT" />
+          <ScanOverlay progress={progress} status="RENDERING LAYOUT" />
 
           <div className="relative mx-auto max-w-7xl px-6 pb-24">
             <div className="flex items-center justify-between border-b border-border/20 py-4">

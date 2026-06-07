@@ -1,6 +1,11 @@
 import type { StoredProjectImage } from "@/types/project"
 
 const STORAGE_KEY = "portfolio-certificate-images"
+export const CERTIFICATE_IMAGE_UPDATE_EVENT = "portfolio-certificate-image-updated"
+
+function notifyUpdate() {
+  window.dispatchEvent(new Event(CERTIFICATE_IMAGE_UPDATE_EVENT))
+}
 
 export function getStoredCertificateImages(): Record<string, StoredProjectImage> {
   try {
@@ -22,12 +27,14 @@ export function saveCertificateImage(
     updatedAt: new Date().toISOString(),
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+  notifyUpdate()
 }
 
 export function clearCertificateImage(certificateId: string) {
   const all = getStoredCertificateImages()
   delete all[certificateId]
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+  notifyUpdate()
 }
 
 export function resolveCertificateImageUrl(
@@ -36,4 +43,13 @@ export function resolveCertificateImageUrl(
 ): string | undefined {
   const stored = getStoredCertificateImages()[certificateId]?.url
   return stored || defaultUrl
+}
+
+export const certificateImageStorage = {
+  storageKey: STORAGE_KEY,
+  updateEvent: CERTIFICATE_IMAGE_UPDATE_EVENT,
+  getStored: getStoredCertificateImages,
+  save: saveCertificateImage,
+  clear: clearCertificateImage,
+  resolve: resolveCertificateImageUrl,
 }

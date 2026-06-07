@@ -1,6 +1,11 @@
 import type { StoredProjectImage } from "@/types/project"
 
 const STORAGE_KEY = "portfolio-project-images"
+export const PROJECT_IMAGE_UPDATE_EVENT = "portfolio-project-image-updated"
+
+function notifyUpdate() {
+  window.dispatchEvent(new Event(PROJECT_IMAGE_UPDATE_EVENT))
+}
 
 export function getStoredProjectImages(): Record<string, StoredProjectImage> {
   try {
@@ -22,12 +27,14 @@ export function saveProjectImage(
     updatedAt: new Date().toISOString(),
   }
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+  notifyUpdate()
 }
 
 export function clearProjectImage(projectId: string) {
   const all = getStoredProjectImages()
   delete all[projectId]
   localStorage.setItem(STORAGE_KEY, JSON.stringify(all))
+  notifyUpdate()
 }
 
 export function resolveProjectImageUrl(
@@ -36,4 +43,13 @@ export function resolveProjectImageUrl(
 ): string | undefined {
   const stored = getStoredProjectImages()[projectId]?.url
   return stored || defaultUrl
+}
+
+export const projectImageStorage = {
+  storageKey: STORAGE_KEY,
+  updateEvent: PROJECT_IMAGE_UPDATE_EVENT,
+  getStored: getStoredProjectImages,
+  save: saveProjectImage,
+  clear: clearProjectImage,
+  resolve: resolveProjectImageUrl,
 }

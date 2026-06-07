@@ -301,8 +301,67 @@
     }
   }
 
-  .scan-progress-bar {
-    box-shadow: 0 0 12px rgba(0, 212, 255, 0.55);
+  .scan-beam {
+    height: 3px;
+    transform: translateY(-50%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 212, 255, 0.35) 15%,
+      rgba(0, 212, 255, 1) 50%,
+      rgba(123, 47, 247, 0.85) 85%,
+      transparent 100%
+    );
+    box-shadow:
+      0 0 18px rgba(0, 212, 255, 0.75),
+      0 0 48px rgba(0, 212, 255, 0.35);
+    z-index: 2;
+  }
+
+  .scan-progress-track {
+    height: 4px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(0, 212, 255, 0.08);
+    border: 1px solid rgba(0, 212, 255, 0.12);
+  }
+
+  .scan-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 212, 255, 0.95),
+      rgba(123, 47, 247, 0.9)
+    );
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.55);
+    transition: width 80ms linear;
+  }
+
+  .scan-ring-progress {
+    filter: drop-shadow(0 0 6px rgba(0, 212, 255, 0.65));
+    transition: stroke-dashoffset 80ms linear;
+  }
+
+  .scan-radar-ping {
+    background: radial-gradient(
+      circle,
+      rgba(0, 212, 255, 0.45) 0%,
+      transparent 68%
+    );
+    animation: scan-radar-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes scan-radar-pulse {
+    0%,
+    100% {
+      transform: scale(0.92);
+      opacity: 0.35;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.75;
+    }
   }
 
   .scan-radar-sweep {

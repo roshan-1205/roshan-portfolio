@@ -17,12 +17,19 @@ const SCAN_STATUSES = [
   "VERIFYING SYSTEMS",
 ] as const
 
+const RING_SIZE = 176
+const RING_STROKE = 3
+const RING_RADIUS = (RING_SIZE - RING_STROKE) / 2
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS
+
 export function Preloader({ onComplete }: PreloaderProps) {
   const reducedMotion = useReducedMotion()
   const [visible, setVisible] = useState(true)
   const [phase, setPhase] = useState<"scan" | "logo" | "exit">("scan")
   const [progress, setProgress] = useState(0)
   const [statusIndex, setStatusIndex] = useState(0)
+
+  const displayPercent = Math.min(100, Math.max(0, Math.round(progress)))
 
   useEffect(() => {
     document.body.style.overflow = "hidden"
@@ -44,12 +51,18 @@ export function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     if (reducedMotion || phase !== "scan") return
 
-    const duration = 3200
+    const duration = 3600
     const start = performance.now()
+    let frameId = 0
+    let cancelled = false
 
     const tick = (now: number) => {
-      const elapsed = now - start
-      const next = Math.min(100, (elapsed / duration) * 100)
+      if (cancelled) return
+
+      const t = Math.min(1, (now - start) / duration)
+      const eased = 1 - Math.pow(1 - t, 2.4)
+      const next = eased * 100
+
       setProgress(next)
       setStatusIndex(
         Math.min(
@@ -58,16 +71,22 @@ export function Preloader({ onComplete }: PreloaderProps) {
         ),
       )
 
-      if (next >= 100) {
-        setPhase("logo")
+      if (t < 1) {
+        frameId = requestAnimationFrame(tick)
         return
       }
 
-      requestAnimationFrame(tick)
+      setProgress(100)
+      setStatusIndex(SCAN_STATUSES.length - 1)
+      window.setTimeout(() => setPhase("logo"), 300)
     }
 
-    const frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
+    frameId = requestAnimationFrame(tick)
+
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(frameId)
+    }
   }, [phase, reducedMotion])
 
   useEffect(() => {
@@ -87,6 +106,8 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
   if (reducedMotion) return null
 
+  const ringOffset = RING_CIRCUMFERENCE * (1 - progress / 100)
+
   return (
     <AnimatePresence>
       {visible && (
@@ -97,9 +118,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
           animate={{
             opacity: phase === "exit" ? 0 : 1,
             clipPath:
-              phase === "exit"
-                ? "inset(0 0 100% 0)"
-                : "inset(0 0 0 0)",
+              phase === "exit" ? "inset(0 0 100% 0)" : "inset(0 0 0 0)",
           }}
           transition={{ duration: phase === "exit" ? 0.7 : 0.3, ease: easeFilm }}
         >
@@ -110,58 +129,106 @@ export function Preloader({ onComplete }: PreloaderProps) {
 
           {phase === "scan" && (
             <motion.div
-              className="relative z-10 flex flex-col items-center"
+              className="relative z-10 flex flex-col items-center px-6"
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: easeFilm }}
             >
-              <div className="relative flex size-36 items-center justify-center md:size-44">
+              <div
+                className="relative flex items-center justify-center"
+                style={{ width: RING_SIZE, height: RING_SIZE }}
+              >
+                <svg
+                  className="absolute inset-0 -rotate-90"
+                  width={RING_SIZE}
+                  height={RING_SIZE}
+                  viewBox={`0 0 ${RING_SIZE} ${RING_SIZE}`}
+                  aria-hidden
+                >
+                  <circle
+                    cx={RING_SIZE / 2}
+                    cy={RING_SIZE / 2}
+                    r={RING_RADIUS}
+                    fill="none"
+                    stroke="rgba(0,212,255,0.12)"
+                    strokeWidth={RING_STROKE}
+                  />
+                  <circle
+                    cx={RING_SIZE / 2}
+                    cy={RING_SIZE / 2}
+                    r={RING_RADIUS}
+                    fill="none"
+                    stroke="url(#scanRingGradient)"
+                    strokeWidth={RING_STROKE}
+                    strokeLinecap="round"
+                    strokeDasharray={RING_CIRCUMFERENCE}
+                    strokeDashoffset={ringOffset}
+                    className="scan-ring-progress"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="scanRingGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="0%"
+                    >
+                      <stop offset="0%" stopColor="rgba(0,212,255,0.9)" />
+                      <stop offset="100%" stopColor="rgba(123,47,247,0.9)" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+
                 <motion.div
-                  className="absolute inset-0 rounded-full border border-cyan/20"
-                  animate={{ scale: [1, 1.08, 1], opacity: [0.4, 0.8, 0.4] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                  className="absolute inset-2 rounded-full border border-dashed border-cyan/25"
+                  className="absolute inset-3 rounded-full border border-dashed border-cyan/25"
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-                />
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                  style={{
-                    background:
-                      "conic-gradient(from 0deg, transparent 62%, rgba(0,212,255,0.45) 78%, transparent 94%)",
-                  }}
+                  transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
                 />
 
-                <div className="relative flex size-24 items-center justify-center rounded-full border border-cyan/30 bg-card/80 backdrop-blur-sm md:size-28">
+                <div className="relative flex size-[7.5rem] items-center justify-center overflow-hidden rounded-full border border-cyan/30 bg-card/85 shadow-[0_0_40px_rgba(0,212,255,0.15)] backdrop-blur-sm md:size-[8.5rem]">
                   <img
                     src="/favicon.png"
                     alt=""
-                    className="size-14 rounded-full md:size-16"
+                    className="relative z-10 size-14 rounded-full md:size-16"
                   />
                   <motion.div
                     className="scan-radar-sweep absolute inset-0 rounded-full"
                     animate={{ rotate: 360 }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "linear" }}
+                  />
+                  <div
+                    className="scan-radar-ping absolute inset-0 rounded-full"
+                    style={{ opacity: 0.15 + (progress / 100) * 0.35 }}
                   />
                 </div>
               </div>
 
-              <motion.p
-                className="mt-8 font-mono-ui text-[10px] tracking-[0.4em] text-cyan/80 uppercase"
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              >
-                {SCAN_STATUSES[statusIndex]}
-              </motion.p>
+              <div className="mt-10 text-center">
+                <motion.p
+                  className="font-mono-ui text-[10px] tracking-[0.4em] text-cyan/80 uppercase"
+                  animate={{ opacity: [0.45, 1, 0.45] }}
+                  transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  {SCAN_STATUSES[statusIndex]}
+                </motion.p>
 
-              <p className="mt-2 font-mono-ui text-3xl font-light tracking-widest text-foreground tabular-nums">
-                {Math.round(progress).toString().padStart(3, "0")}
-                <span className="text-cyan/60">%</span>
-              </p>
+                <div
+                  className="mt-4 flex items-end justify-center gap-1"
+                  aria-live="polite"
+                  aria-atomic="true"
+                >
+                  <span className="min-w-[3ch] font-display text-6xl font-light leading-none tracking-tight text-foreground tabular-nums md:min-w-[4ch] md:text-7xl">
+                    {displayPercent}
+                  </span>
+                  <span className="mb-2 font-mono-ui text-2xl font-medium text-cyan md:text-3xl">
+                    %
+                  </span>
+                </div>
+
+                <p className="mt-3 font-mono-ui text-[9px] tracking-[0.3em] text-muted-foreground uppercase">
+                  System scan in progress
+                </p>
+              </div>
             </motion.div>
           )}
 
@@ -177,7 +244,7 @@ export function Preloader({ onComplete }: PreloaderProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                Access granted
+                Scan complete · 100%
               </motion.p>
               <motion.h1
                 className="font-display text-4xl font-light tracking-[0.3em] text-foreground md:text-6xl"
