@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react"
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { AppLayout } from "@/components/layout/AppLayout"
+import { ResumeLayout } from "@/components/layout/ResumeLayout"
 import { PortfolioSkeleton } from "@/components/layout/PortfolioSkeleton"
 import { Preloader } from "@/components/layout/Preloader"
-import { Navigation } from "@/components/layout/Navigation"
-import { ScrollProgress } from "@/components/layout/ScrollProgress"
-import { Letterbox } from "@/components/layout/Letterbox"
-import { FilmGrain } from "@/components/effects/FilmGrain"
-import { HeroSection } from "@/components/sections/HeroSection"
-import { AboutSection } from "@/components/sections/AboutSection"
-import { SkillsSection } from "@/components/sections/SkillsSection"
-import { ProjectsSection } from "@/components/sections/ProjectsSection"
-import { AchievementsSection } from "@/components/sections/AchievementsSection"
-import { ContactSection } from "@/components/sections/ContactSection"
-import { FooterSection } from "@/components/sections/FooterSection"
+import { AboutPage } from "@/pages/AboutPage"
+import { AchievementsPage } from "@/pages/AchievementsPage"
+import { ContactPage } from "@/pages/ContactPage"
+import { HomePage } from "@/pages/HomePage"
+import { ProjectsPage } from "@/pages/ProjectsPage"
+import { ResumePage } from "@/pages/ResumePage"
 
 type LoadPhase = "preloader" | "skeleton" | "ready"
 
@@ -35,26 +33,29 @@ function App() {
 
       <PortfolioSkeleton visible={phase === "skeleton"} />
 
-      <FilmGrain />
-      <ScrollProgress />
-      <Letterbox />
-      {ready && <Navigation />}
-
-      <main
+      <div
         className={
           ready
             ? "opacity-100 transition-opacity duration-700"
             : "pointer-events-none opacity-0"
         }
       >
-        <HeroSection />
-        <AboutSection />
-        <SkillsSection />
-        <ProjectsSection />
-        <AchievementsSection />
-        <ContactSection />
-        <FooterSection />
-      </main>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/projects" element={<ProjectsPage />} />
+              <Route path="/achievements" element={<AchievementsPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+            <Route element={<ResumeLayout />}>
+              <Route path="/resume" element={<ResumePage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
     </>
   )
 }

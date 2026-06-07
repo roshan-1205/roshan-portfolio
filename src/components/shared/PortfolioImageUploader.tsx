@@ -57,18 +57,8 @@ export function PortfolioImageUploader({
     }
   }
 
-  const handleRemove = (event: React.MouseEvent) => {
-    event.stopPropagation()
-    onRemove()
-  }
-
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-2xl border border-border/30 bg-gradient-to-br from-cyan/10 via-card to-purple/10",
-        aspectClass,
-      )}
-    >
+    <div className="flex w-full flex-col gap-2">
       <input
         ref={inputRef}
         type="file"
@@ -79,8 +69,13 @@ export function PortfolioImageUploader({
         aria-label={`Upload image for ${title}`}
       />
 
-      {hasImage ? (
-        <>
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-2xl border border-border/30 bg-gradient-to-br from-cyan/10 via-card to-purple/10",
+          aspectClass,
+        )}
+      >
+        {hasImage ? (
           <img
             key={displayUrl}
             src={displayUrl}
@@ -92,89 +87,92 @@ export function PortfolioImageUploader({
             loading="eager"
             decoding="async"
           />
+        ) : (
+          <button
+            type="button"
+            className={cn(
+              "absolute inset-0 flex w-full flex-col items-center justify-center gap-3 px-4 text-center transition-colors",
+              cloudinaryReady && !isUploading
+                ? "cursor-pointer hover:bg-cyan/5"
+                : "cursor-default",
+            )}
+            onClick={openFilePicker}
+            disabled={isUploading || !cloudinaryReady}
+            aria-label={`Upload image for ${title}`}
+          >
+            {placeholder ?? (
+              <>
+                <ImagePlus className="size-10 text-cyan/40" />
+                <p className="font-mono-ui text-[10px] tracking-[0.25em] text-muted-foreground uppercase">
+                  {isUploading ? "Uploading…" : "Tap to upload image"}
+                </p>
+              </>
+            )}
+          </button>
+        )}
 
+        {isUploading && (
+          <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-background/70 backdrop-blur-sm">
+            <Loader2 className="size-8 animate-spin text-cyan" />
+            <p className="font-mono-ui text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+              Uploading to Cloudinary…
+            </p>
+          </div>
+        )}
+
+        {!cloudinaryReady && !hasImage && (
+          <p className="absolute inset-x-3 bottom-3 z-20 rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1.5 text-center font-mono-ui text-[9px] leading-snug text-amber-200">
+            Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in
+            .env.local
+          </p>
+        )}
+      </div>
+
+      {hasImage && (
+        <div className="flex flex-col items-center gap-2">
           <div
-            className="absolute top-1.5 right-1.5 z-20 flex gap-1 sm:top-2 sm:right-2"
+            className="flex items-center justify-center gap-2"
             role="toolbar"
             aria-label={`Image actions for ${title}`}
           >
             <Button
               type="button"
               size="icon-xs"
-              className="size-7 rounded-md border border-cyan-400/50 bg-cyan-500 text-white shadow-md hover:border-cyan-300 hover:bg-cyan-400 sm:size-8"
+              className="size-7 rounded-full border border-cyan/30 bg-cyan/10 text-cyan shadow-sm hover:border-cyan/50 hover:bg-cyan/20"
               disabled={isUploading || !cloudinaryReady}
               onClick={openFilePicker}
               aria-label={`Replace image for ${title}`}
               title="Replace image"
             >
               {isUploading ? (
-                <Loader2 className="size-3.5 animate-spin text-white" />
+                <Loader2 className="size-3.5 animate-spin" />
               ) : (
-                <Upload className="size-3.5 text-white" />
+                <Upload className="size-3.5" />
               )}
             </Button>
             <Button
               type="button"
               size="icon-xs"
-              className="size-7 rounded-md border border-red-400/50 bg-red-600 text-white shadow-md hover:border-red-300 hover:bg-red-500 sm:size-8"
+              className="size-7 rounded-full border border-destructive/35 bg-destructive/10 text-destructive shadow-sm hover:border-destructive/50 hover:bg-destructive/20"
               disabled={isUploading}
-              onClick={handleRemove}
+              onClick={onRemove}
               aria-label={`Remove image for ${title}`}
               title="Remove image"
             >
-              <Trash2 className="size-3.5 text-white" />
+              <Trash2 className="size-3.5" />
             </Button>
           </div>
-        </>
-      ) : (
-        <button
-          type="button"
-          className={cn(
-            "absolute inset-0 flex w-full flex-col items-center justify-center gap-3 px-4 text-center transition-colors",
-            cloudinaryReady && !isUploading
-              ? "cursor-pointer hover:bg-cyan/5"
-              : "cursor-default",
-          )}
-          onClick={openFilePicker}
-          disabled={isUploading || !cloudinaryReady}
-          aria-label={`Upload image for ${title}`}
-        >
-          {placeholder ?? (
-            <>
-              <ImagePlus className="size-10 text-cyan/40" />
-              <p className="font-mono-ui text-[10px] tracking-[0.25em] text-muted-foreground uppercase">
-                {isUploading ? "Uploading…" : "Tap to upload image"}
-              </p>
-            </>
-          )}
-        </button>
-      )}
 
-      {isUploading && (
-        <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-background/70 backdrop-blur-sm">
-          <Loader2 className="size-8 animate-spin text-cyan" />
-          <p className="font-mono-ui text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
-            Uploading to Cloudinary…
+          <p className="font-mono-ui text-[8px] tracking-wide text-muted-foreground sm:text-[9px]">
+            {storageLabel}/{assetId}
           </p>
         </div>
       )}
 
-      {!cloudinaryReady && !hasImage && (
-        <p className="absolute inset-x-3 bottom-3 z-20 rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-1.5 text-center font-mono-ui text-[9px] leading-snug text-amber-200">
-          Set VITE_CLOUDINARY_CLOUD_NAME and VITE_CLOUDINARY_UPLOAD_PRESET in .env.local
-        </p>
-      )}
-
-      {hasImage && (
-        <p className="pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-background/90 to-transparent px-3 py-2 text-center font-mono-ui text-[8px] tracking-wide text-muted-foreground sm:text-[9px]">
-          {storageLabel}/{assetId}
-        </p>
-      )}
-
       {error && (
-        <div className="absolute inset-x-0 bottom-0 z-40 max-h-24 overflow-y-auto bg-destructive/95 px-3 py-2 text-center text-[10px] leading-snug break-words text-white sm:text-xs">
+        <p className="rounded-md bg-destructive/10 px-3 py-2 text-center text-[10px] leading-snug break-words text-destructive sm:text-xs">
           {error}
-        </div>
+        </p>
       )}
     </div>
   )

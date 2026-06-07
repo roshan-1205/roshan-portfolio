@@ -27,6 +27,7 @@ function ensureConfig() {
 const ALLOWED_FOLDERS = new Set([
   "portfolio-projects",
   "portfolio-certificates",
+  "portfolio-profile",
 ])
 
 export async function uploadPortfolioImage(

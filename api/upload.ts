@@ -4,6 +4,7 @@ import { uploadPortfolioImage } from "../lib/cloudinary-upload-server"
 const ALLOWED_FOLDERS = new Set([
   "portfolio-projects",
   "portfolio-certificates",
+  "portfolio-profile",
 ])
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {

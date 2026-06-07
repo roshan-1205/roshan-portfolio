@@ -18,13 +18,20 @@ export const personal = {
 }
 
 export const navLinks = [
-  { href: "#hero", label: "Home" },
-  { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
-  { href: "#projects", label: "Projects" },
-  { href: "#achievements", label: "Achievements" },
-  { href: "#contact", label: "Contact" },
-]
+  { path: "/", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/projects", label: "Projects" },
+  { path: "/achievements", label: "Achievements" },
+  { path: "/resume", label: "Resume" },
+  { path: "/contact", label: "Contact" },
+] as const
+
+export const homeIntroduction = [
+  "I fell in love with technology and programming, and I am trying to learn something new every day, I know... 🤷‍♂️",
+  "I am proficient in Node.js, Express, MongoDB, TypeScript, Python, AWS, and Git/GitHub.",
+  "My fields of interest are Web Technologies, Artificial Intelligence, Cloud Computing, Full-Stack Development, and building innovative digital products.",
+  "My true passion lies in Data Structures & Algorithms, Software Engineering, Problem Solving, and creating scalable solutions that make a real-world impact. 🚀",
+] as const
 
 export const stats = [
   { value: 3, suffix: "+", label: "Years of Experience" },

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Code, Globe } from "lucide-react"
+import { Link } from "react-router-dom"
 import { GitHubIcon, LinkedInIcon } from "@/components/icons/SocialIcons"
 import { marqueeText, navLinks, personal } from "@/data/portfolio"
 import { fadeUp, staggerContainer } from "@/lib/animations"
@@ -63,13 +64,13 @@ export function FooterSection() {
             </p>
             <div className="flex flex-wrap gap-x-4 gap-y-2">
               {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
+                <Link
+                  key={link.path}
+                  to={link.path}
                   className="text-sm text-muted-foreground transition-colors hover:text-cyan"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
             </div>
           </motion.div>
@@ -104,7 +105,7 @@ export function FooterSection() {
           viewport={{ once: true }}
         >
           <p className="font-mono-ui text-xs text-muted-foreground">
-            © 2024 {personal.name}. All Rights Reserved.
+            © 2026 {personal.name}. All Rights Reserved.
           </p>
           <p className="font-mono-ui text-xs text-muted-foreground">
             Designed & Built with ❤️ by {personal.name}

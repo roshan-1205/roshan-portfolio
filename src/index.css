@@ -76,6 +76,19 @@
     background-clip: text;
   }
 
+  .bg-starfield {
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 18%, rgba(240, 237, 232, 0.35), transparent),
+      radial-gradient(1px 1px at 78% 32%, rgba(0, 212, 255, 0.28), transparent),
+      radial-gradient(1px 1px at 44% 72%, rgba(123, 47, 247, 0.22), transparent),
+      radial-gradient(1.5px 1.5px at 88% 68%, rgba(240, 237, 232, 0.2), transparent),
+      radial-gradient(1px 1px at 24% 58%, rgba(0, 212, 255, 0.18), transparent),
+      radial-gradient(1px 1px at 62% 12%, rgba(123, 47, 247, 0.2), transparent),
+      radial-gradient(1px 1px at 6% 84%, rgba(240, 237, 232, 0.15), transparent),
+      radial-gradient(1.5px 1.5px at 52% 38%, rgba(0, 212, 255, 0.15), transparent);
+    background-size: 280px 280px;
+  }
+
   .section-angled {
     /* Bottom angle only — top stays flat so section labels are not clipped */
     clip-path: polygon(0 0, 100% 0, 100% 97%, 0 100%);
@@ -361,6 +374,58 @@
     50% {
       transform: scale(1.05);
       opacity: 0.75;
+    }
+  }
+
+  .intro-avatar-glow {
+    background: radial-gradient(
+      circle,
+      rgba(0, 212, 255, 0.12) 0%,
+      rgba(123, 47, 247, 0.06) 40%,
+      transparent 68%
+    );
+    filter: blur(20px);
+    animation: intro-avatar-glow-pulse 4s ease-in-out infinite;
+  }
+
+  .intro-avatar-orbit {
+    border: 1px dashed rgba(136, 136, 170, 0.22);
+    border-radius: 9999px;
+    animation: intro-avatar-orbit-spin 18s linear infinite;
+  }
+
+  .intro-avatar-ring {
+    background: conic-gradient(
+      from 0deg,
+      rgba(0, 212, 255, 0.25),
+      rgba(123, 47, 247, 0.35),
+      rgba(0, 212, 255, 0.25)
+    );
+    animation: intro-avatar-orbit-spin 6s linear infinite;
+  }
+
+  .intro-avatar-sparkle {
+    box-shadow: 0 0 5px rgba(0, 212, 255, 0.45);
+  }
+
+  @keyframes intro-avatar-glow-pulse {
+    0%,
+    100% {
+      transform: scale(0.95);
+      opacity: 0.65;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+  }
+
+  @keyframes intro-avatar-orbit-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 

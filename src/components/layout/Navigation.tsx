@@ -1,14 +1,19 @@
 import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 import { useState } from "react"
+import { Link, NavLink, useLocation } from "react-router-dom"
 import { navLinks } from "@/data/portfolio"
-import { useActiveSection } from "@/hooks/useActiveSection"
 import { cn } from "@/lib/utils"
 import { easeFilm } from "@/lib/animations"
 
 export function Navigation() {
   const [open, setOpen] = useState(false)
-  const active = useActiveSection()
+  const { pathname } = useLocation()
+
+  const isActive = (path: string) => {
+    if (path === "/") return pathname === "/"
+    return pathname.startsWith(path)
+  }
 
   return (
     <>
@@ -16,36 +21,38 @@ export function Navigation() {
         className="fixed top-0 right-0 left-0 z-[200] border-b border-border/30 bg-background/60 backdrop-blur-xl"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1.2, delay: 2.5, ease: easeFilm }}
+        transition={{ duration: 0.8, ease: easeFilm }}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a
-            href="#hero"
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+          <Link
+            to="/"
             className="font-mono-ui text-xs tracking-widest text-cyan uppercase"
+            onClick={() => setOpen(false)}
           >
             Roshan.dev
-          </a>
+          </Link>
 
           <div className="hidden items-center gap-1 md:flex">
             {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
+              <NavLink
+                key={link.path}
+                to={link.path}
+                end={link.path === "/"}
                 className={cn(
                   "relative px-4 py-2 font-mono-ui text-xs tracking-wider uppercase transition-colors",
-                  active === link.href.slice(1)
+                  isActive(link.path)
                     ? "text-cyan"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {link.label}
-                {active === link.href.slice(1) && (
+                {isActive(link.path) && (
                   <motion.span
                     layoutId="nav-indicator"
                     className="absolute bottom-0 left-1/2 h-px w-6 -translate-x-1/2 bg-cyan"
                   />
                 )}
-              </a>
+              </NavLink>
             ))}
           </div>
 
@@ -71,17 +78,25 @@ export function Navigation() {
           >
             <div className="flex flex-col items-center gap-8">
               {navLinks.map((link, i) => (
-                <motion.a
-                  key={link.href}
-                  href={link.href}
-                  className="font-display text-3xl text-foreground"
+                <motion.div
+                  key={link.path}
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.08, duration: 0.5 }}
-                  onClick={() => setOpen(false)}
                 >
-                  {link.label}
-                </motion.a>
+                  <Link
+                    to={link.path}
+                    className={cn(
+                      "font-display text-3xl transition-colors",
+                      isActive(link.path)
+                        ? "text-cyan"
+                        : "text-foreground",
+                    )}
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
             </div>
           </motion.div>

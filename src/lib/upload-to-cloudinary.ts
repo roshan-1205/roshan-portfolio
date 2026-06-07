@@ -1,6 +1,9 @@
 import { getCloudinaryClientConfig } from "@/lib/cloudinary-config"
 
-export type UploadFolder = "portfolio-projects" | "portfolio-certificates"
+export type UploadFolder =
+  | "portfolio-projects"
+  | "portfolio-certificates"
+  | "portfolio-profile"
 
 type UploadResult = { url: string; publicId: string }
 

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Download } from "lucide-react"
+import { Link } from "react-router-dom"
 import { HeroRobotGuide } from "@/components/avatar/HeroRobotGuide"
 import { personal } from "@/data/portfolio"
 import { Starfield } from "@/components/effects/Starfield"
@@ -59,7 +60,7 @@ export function HeroSection() {
               size="lg"
               className="h-12 border-cyan/30 bg-cyan/10 px-8 font-mono-ui text-xs tracking-widest text-cyan uppercase hover:bg-cyan/20"
             >
-              <a href="#projects">View My Work</a>
+              <Link to="/projects">View My Work</Link>
             </Button>
             <Button
               asChild
@@ -67,15 +68,10 @@ export function HeroSection() {
               size="lg"
               className="h-12 border-border/50 px-8 font-mono-ui text-xs tracking-widest uppercase"
             >
-              <a
-                href={personal.cvUrl}
-                download={personal.cvFileName}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link to="/resume">
                 <Download className="mr-2 size-4" />
-                Download CV
-              </a>
+                View Resume
+              </Link>
             </Button>
           </motion.div>
         </div>

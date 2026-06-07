@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
+import { AboutSkillsSection } from "@/components/about/AboutSkillsSection"
 import { aboutParagraphs, stats, techPillars } from "@/data/portfolio"
 import { AnimatedCounter } from "@/components/effects/AnimatedCounter"
 import { SectionLabel } from "@/components/layout/SectionLabel"
@@ -68,6 +69,8 @@ export function AboutSection() {
             ))}
           </motion.div>
         </div>
+
+        <AboutSkillsSection />
 
         <motion.div
           className="mt-20 grid gap-6 md:grid-cols-3"
