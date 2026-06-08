@@ -1,59 +1,22 @@
 import { motion } from "framer-motion"
-import type { ComponentType, SVGProps } from "react"
 import {
-  AwsIcon,
-  Css3Icon,
-  DockerIcon,
-  ExpressIcon,
-  GitIcon,
-  Html5Icon,
-  JavaScriptIcon,
-  LinuxIcon,
-  MongoDbIcon,
-  NextJsIcon,
-  NodeJsIcon,
-  PostmanIcon,
-  PythonIcon,
-  ReactIcon,
-  TypeScriptIcon,
-  VsCodeIcon,
+  professionalSkillset,
+  TechBrandLogo,
+  toolsUsed,
 } from "@/components/icons/TechIcons"
 import { CodingActivityCalendar } from "@/components/about/CodingActivityCalendar"
-import { GitHubIcon } from "@/components/icons/SocialIcons"
 import { fadeUp, staggerContainer } from "@/lib/animations"
 
-type SkillItem = {
-  label: string
-  icon: ComponentType<SVGProps<SVGSVGElement>>
-}
-
-const professionalSkillset: SkillItem[] = [
-  { label: "TypeScript", icon: TypeScriptIcon },
-  { label: "JavaScript", icon: JavaScriptIcon },
-  { label: "React", icon: ReactIcon },
-  { label: "Node.js", icon: NodeJsIcon },
-  { label: "Express", icon: ExpressIcon },
-  { label: "MongoDB", icon: MongoDbIcon },
-  { label: "Python", icon: PythonIcon },
-  { label: "Next.js", icon: NextJsIcon },
-  { label: "HTML5", icon: Html5Icon },
-  { label: "CSS3", icon: Css3Icon },
-]
-
-const toolsUsed: SkillItem[] = [
-  { label: "VS Code", icon: VsCodeIcon },
-  { label: "Linux", icon: LinuxIcon },
-  { label: "Git", icon: GitIcon },
-  { label: "Postman", icon: PostmanIcon },
-  { label: "GitHub", icon: GitHubIcon },
-  { label: "Docker", icon: DockerIcon },
-  { label: "AWS", icon: AwsIcon },
-]
-
-function SkillGrid({ items }: { items: SkillItem[] }) {
+function SkillGrid({
+  items,
+  gridClassName = "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5",
+}: {
+  items: typeof professionalSkillset
+  gridClassName?: string
+}) {
   return (
     <motion.div
-      className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5"
+      className={`grid gap-3 sm:gap-4 ${gridClassName}`}
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -66,7 +29,10 @@ function SkillGrid({ items }: { items: SkillItem[] }) {
           title={item.label}
           className="flex aspect-[5/4] items-center justify-center rounded-lg border border-purple/45 bg-background/50 p-4 transition-colors hover:border-purple hover:bg-purple/5"
         >
-          <item.icon className="size-9 text-foreground sm:size-10" />
+          <TechBrandLogo
+            skill={item}
+            className="size-9 object-contain sm:size-10"
+          />
         </motion.div>
       ))}
     </motion.div>
@@ -92,7 +58,10 @@ export function AboutSkillsSection() {
             <span className="text-foreground">Professional </span>
             <span className="text-purple">Skillset</span>
           </h3>
-          <SkillGrid items={professionalSkillset} />
+          <SkillGrid
+            items={professionalSkillset}
+            gridClassName="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8"
+          />
         </div>
 
         <div className="space-y-8">
@@ -100,7 +69,10 @@ export function AboutSkillsSection() {
             <span className="text-purple">Tools </span>
             <span className="text-foreground">I use</span>
           </h3>
-          <SkillGrid items={toolsUsed} />
+          <SkillGrid
+            items={toolsUsed}
+            gridClassName="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-8"
+          />
         </div>
 
         <CodingActivityCalendar />
