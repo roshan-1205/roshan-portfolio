@@ -15,6 +15,9 @@ export const personal = {
     "Open to full-time roles, freelance, consulting, startup collaboration, speaking & strategic partnerships",
   cvUrl: "/Roshan-Kumar-Singh-CV.pdf",
   cvFileName: "Roshan-Kumar-Singh-CV.pdf",
+  /** Set your profile photo URL here (Cloudinary, Imgur, etc.) */
+  profileImageUrl:
+    "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780871614/portfolio-projects/intro-profile.jpg",
 }
 
 export const navLinks = [
@@ -140,6 +143,8 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     liveUrl: "https://vaani-ai-assistant-419de.web.app",
     githubUrl: "https://github.com/roshan-1205/VAANI",
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780868547/portfolio-projects/vaani.png",
   },
   {
     id: "vibely",
@@ -167,6 +172,8 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     liveUrl: "https://vibely-frontend-orpin.vercel.app",
     githubUrl: "https://github.com/roshan-1205/VIBELY",
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780868780/portfolio-projects/vibely.png",
   },
   {
     id: "pharmily",
@@ -195,6 +202,8 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     liveUrl: "https://pharmily-pm.web.app",
     githubUrl: "https://github.com/roshan-1205/PHARMILY",
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780878560/portfolio-projects/pharmily.png",
   },
   {
     id: "fleetwatch",
@@ -222,6 +231,8 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     liveUrl: "https://shiva0999-fleet-watch.hf.space",
     githubUrl: "https://github.com/roshan-1205/FleetWatch",
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780878537/portfolio-projects/fleetwatch.png",
   },
   {
     id: "aks-beauty-hut",
@@ -248,6 +259,8 @@ export const featuredProjects: FeaturedProject[] = [
     ],
     liveUrl: "https://aksbeautyhut.vercel.app/",
     githubUrl: "https://github.com/roshan-1205/AKS-Beauty-Hut",
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780878498/portfolio-projects/aks-beauty-hut.png",
   },
 ]
 
@@ -295,6 +308,8 @@ export const certifications: Certification[] = [
     year: "2024",
     credential: "UC-XXXXXXXXXX",
     skills: ["HTML", "CSS", "JavaScript", "React.js", "MongoDB"],
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780871989/portfolio-projects/web-development.jpg",
   },
   {
     id: "software-developer-it-ites",
@@ -304,6 +319,8 @@ export const certifications: Certification[] = [
     year: "2025",
     credential: "UC-XXXXXXXXXX",
     skills: ["Software Development"],
+    imageUrl:
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780877189/portfolio-projects/software-developer-it-ites.jpg",
   },
 ]
 

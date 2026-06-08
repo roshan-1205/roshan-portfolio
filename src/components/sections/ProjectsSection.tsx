@@ -136,10 +136,9 @@ function FeaturedProject({
 
       <motion.div style={{ y }} variants={wipeReveal}>
         <ProjectImagePanel
-          projectId={project.id}
           projectNumber={project.number}
           title={project.title}
-          defaultImageUrl={project.imageUrl}
+          imageUrl={project.imageUrl}
         />
       </motion.div>
     </motion.div>

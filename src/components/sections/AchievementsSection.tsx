@@ -149,10 +149,7 @@ export function AchievementsSection() {
               Certificate Gallery
             </h3>
             <p className="max-w-2xl text-sm text-muted-foreground">
-              Upload certificate photos — saved to Cloudinary under{" "}
-              <span className="font-mono-ui text-cyan/80">
-                portfolio-certificates/
-              </span>
+              Professional certifications and credentials earned along the way.
             </p>
           </div>
 
@@ -186,9 +183,8 @@ export function AchievementsSection() {
 
                 <Card className="h-full overflow-hidden border-border/30 bg-card/80 transition-shadow hover:shadow-[0_0_30px_rgba(123,47,247,0.08)]">
                   <CertificateImagePanel
-                    certificateId={cert.id}
                     title={cert.title}
-                    defaultImageUrl={cert.imageUrl}
+                    imageUrl={cert.imageUrl}
                   />
 
                   <CardContent className="space-y-3 p-4 sm:p-6">

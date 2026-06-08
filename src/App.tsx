@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { hydrateAllImageRegistries } from "@/lib/image-registry"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { AppLayout } from "@/components/layout/AppLayout"
 import { Navigation } from "@/components/layout/Navigation"
@@ -23,11 +22,6 @@ function App() {
 
     const timer = window.setTimeout(() => setPhase("ready"), 1100)
     return () => window.clearTimeout(timer)
-  }, [phase])
-
-  useEffect(() => {
-    if (phase !== "ready") return
-    void hydrateAllImageRegistries()
   }, [phase])
 
   const ready = phase === "ready"
