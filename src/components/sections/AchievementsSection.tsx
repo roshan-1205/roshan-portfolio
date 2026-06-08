@@ -150,6 +150,7 @@ export function AchievementsSection() {
             </h3>
             <p className="max-w-2xl text-sm text-muted-foreground">
               Professional certifications and credentials earned along the way.
+              Click any certificate image to view it full screen.
             </p>
           </div>
 
@@ -185,6 +186,7 @@ export function AchievementsSection() {
                   <CertificateImagePanel
                     title={cert.title}
                     imageUrl={cert.imageUrl}
+                    subtitle={`${cert.issuer}${cert.instructor ? ` · ${cert.instructor}` : ""} · ${cert.year}`}
                   />
 
                   <CardContent className="space-y-3 p-4 sm:p-6">

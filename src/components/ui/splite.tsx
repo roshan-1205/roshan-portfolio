@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react"
+import { BrandedLoadingOverlay } from "@/components/layout/BrandedLoadingOverlay"
 
 const Spline = lazy(() => import("@splinetool/react-spline"))
 
@@ -7,15 +8,23 @@ interface SplineSceneProps {
   className?: string
 }
 
+function SplineLoadingFallback() {
+  return (
+    <div className="relative h-full min-h-[280px] w-full">
+      <BrandedLoadingOverlay
+        visible
+        mode="absolute"
+        status="Loading 3D scene"
+        simulateProgress
+        showScanOverlay={false}
+      />
+    </div>
+  )
+}
+
 export function SplineScene({ scene, className }: SplineSceneProps) {
   return (
-    <Suspense
-      fallback={
-        <div className="flex h-full w-full items-center justify-center">
-          <span className="loader" />
-        </div>
-      }
-    >
+    <Suspense fallback={<SplineLoadingFallback />}>
       <Spline
         scene={scene}
         className={className}

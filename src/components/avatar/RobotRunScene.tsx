@@ -1,4 +1,5 @@
 import { Suspense } from "react"
+import { BrandedLoadingOverlay } from "@/components/layout/BrandedLoadingOverlay"
 import { Canvas } from "@react-three/fiber"
 import { ContactShadows, Environment, PerspectiveCamera } from "@react-three/drei"
 import { WhiteBallRobot } from "@/components/avatar/WhiteBallRobot"
@@ -41,18 +42,32 @@ function Scene({ speaking }: { speaking: boolean }) {
   )
 }
 
+function SceneLoadingFallback() {
+  return (
+    <div className="relative h-full min-h-[320px] w-full bg-[#0a0a10]">
+      <BrandedLoadingOverlay
+        visible
+        mode="absolute"
+        status="Loading 3D scene"
+        simulateProgress
+        showScanOverlay={false}
+      />
+    </div>
+  )
+}
+
 export function RobotRunScene({ speaking, className }: RobotRunSceneProps) {
   return (
     <div className={className} style={{ minHeight: 320 }}>
-      <Canvas
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: false }}
-        style={{ background: "#0a0a10", width: "100%", height: "100%" }}
-      >
-        <Suspense fallback={null}>
+      <Suspense fallback={<SceneLoadingFallback />}>
+        <Canvas
+          dpr={[1, 1.5]}
+          gl={{ antialias: true, alpha: false }}
+          style={{ background: "#0a0a10", width: "100%", height: "100%" }}
+        >
           <Scene speaking={speaking} />
-        </Suspense>
-      </Canvas>
+        </Canvas>
+      </Suspense>
     </div>
   )
 }

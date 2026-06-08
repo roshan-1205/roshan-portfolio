@@ -46,7 +46,7 @@ export function HomeIntroSection() {
             </motion.div>
           </div>
 
-          <div className="flex items-center justify-center lg:sticky lg:top-28 lg:justify-center">
+          <div className="flex items-start justify-center lg:sticky lg:top-28 lg:justify-end lg:pr-4 xl:pr-8">
             <IntroProfilePanel />
           </div>
         </div>

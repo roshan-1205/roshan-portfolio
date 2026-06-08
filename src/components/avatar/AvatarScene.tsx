@@ -1,4 +1,5 @@
 import { Suspense, useState } from "react"
+import { BrandedLoadingOverlay } from "@/components/layout/BrandedLoadingOverlay"
 import { Canvas } from "@react-three/fiber"
 import {
   ContactShadows,
@@ -52,6 +53,20 @@ function SceneContent({
   )
 }
 
+function AvatarSceneLoadingFallback() {
+  return (
+    <div className="relative h-full min-h-[280px] w-full">
+      <BrandedLoadingOverlay
+        visible
+        mode="absolute"
+        status="Loading avatar"
+        simulateProgress
+        showScanOverlay={false}
+      />
+    </div>
+  )
+}
+
 export function AvatarScene({ waving, className }: AvatarSceneProps) {
   const [pointer, setPointer] = useState({ x: 0, y: 0 })
 
@@ -66,15 +81,15 @@ export function AvatarScene({ waving, className }: AvatarSceneProps) {
       }}
       onPointerLeave={() => setPointer({ x: 0, y: 0 })}
     >
-      <Canvas
-        dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: "transparent" }}
-      >
-        <Suspense fallback={null}>
+      <Suspense fallback={<AvatarSceneLoadingFallback />}>
+        <Canvas
+          dpr={[1, 1.75]}
+          gl={{ antialias: true, alpha: true }}
+          style={{ background: "transparent" }}
+        >
           <SceneContent waving={waving} pointer={pointer} />
-        </Suspense>
-      </Canvas>
+        </Canvas>
+      </Suspense>
     </div>
   )
 }

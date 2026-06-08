@@ -51,6 +51,10 @@
 
   body {
     @apply bg-background text-foreground font-sans overflow-x-hidden;
+  }
+
+  #root {
+    min-height: 100%;
     filter: contrast(1.02) saturate(0.95);
   }
 
@@ -208,6 +212,10 @@
       rgba(123, 47, 247, 0.08) 85%,
       rgba(0, 0, 0, 0.15) 100%
     );
+  }
+
+  .robot-chest-logo {
+    top: 46%;
   }
 
   .skeleton-shimmer {
@@ -570,4 +578,95 @@
     display: flex !important;
   }
 
+}
+
+.image-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(2, 2, 7, 0.94);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.image-lightbox-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 56rem);
+  max-height: calc(100vh - 2rem);
+  margin: auto;
+  border-radius: 1rem;
+  border: 1px solid rgba(136, 136, 170, 0.35);
+  background: #0d0d1a;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+}
+
+.image-lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  padding: 0.75rem 0.75rem 0;
+}
+
+.image-lightbox-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(136, 136, 170, 0.35);
+  background: #0d0d1a;
+  color: #f0ede8;
+  cursor: pointer;
+  line-height: 0;
+  padding: 0;
+}
+
+.image-lightbox-close svg {
+  display: block;
+}
+
+.image-lightbox-close:hover {
+  border-color: rgba(0, 212, 255, 0.45);
+  color: #00d4ff;
+}
+
+.image-lightbox-image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  max-height: calc(100vh - 12rem);
+  padding: 0.5rem 1.25rem 1rem;
+  background: rgba(26, 26, 46, 0.55);
+  overflow: auto;
+}
+
+.image-lightbox-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 14rem);
+  object-fit: contain;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.image-lightbox-footer {
+  border-top: 1px solid rgba(136, 136, 170, 0.25);
+  padding: 1rem 1.25rem;
+  color: #f0ede8;
+}
+
+.image-lightbox-footer .text-muted-foreground {
+  color: rgba(240, 237, 232, 0.65);
 }

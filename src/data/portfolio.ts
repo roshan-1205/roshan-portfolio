@@ -8,6 +8,7 @@ export const personal = {
   email: "roshankumarsingh021@gmail.com",
   linkedin: "https://linkedin.com/in/roshan-kumar-singh-1205-dev",
   github: "https://github.com/roshan-1205",
+  portfolioRepo: "https://github.com/roshan-1205/roshan-portfolio",
   leetcode: "https://leetcode.com/roshan-1205",
   portfolio: "https://roshan-portfolio-indol.vercel.app",
   location: "India",

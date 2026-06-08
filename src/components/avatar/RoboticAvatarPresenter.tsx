@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { personal } from "@/data/portfolio"
+import { RobotChestLogo } from "@/components/avatar/RobotChestLogo"
 import { SplineRobotScene } from "@/components/avatar/SplineRobotScene"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
 import robotRef from "@/assets/avatar/white-ball-robot-ref.png"
@@ -58,6 +59,8 @@ export function RoboticAvatarPresenter({
           ) : (
             <SplineRobotScene className="h-full" />
           )}
+
+          <RobotChestLogo />
 
           <div className="pointer-events-none absolute inset-3 z-10 rounded-lg border border-cyan/15">
             <span className="absolute -top-px -left-px size-4 border-t-2 border-l-2 border-cyan/50" />

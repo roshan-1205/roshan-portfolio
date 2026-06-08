@@ -1,8 +1,33 @@
-import { Menu, X } from "lucide-react"
+import { GitFork, Menu, Star, X } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { Link, NavLink, useLocation } from "react-router-dom"
-import { navLinks } from "@/data/portfolio"
+import { navLinks, personal } from "@/data/portfolio"
 import { cn } from "@/lib/utils"
+
+function GitHubRepoButton({
+  className,
+  onClick,
+}: {
+  className?: string
+  onClick?: () => void
+}) {
+  return (
+    <a
+      href={personal.portfolioRepo}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+      aria-label="View portfolio repository on GitHub"
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-md bg-purple px-2.5 py-1.5 text-white shadow-[0_0_12px_rgba(123,47,247,0.35)] transition-opacity hover:opacity-90",
+        className,
+      )}
+    >
+      <GitFork className="size-3.5" strokeWidth={2.25} />
+      <Star className="size-3.5 fill-current" strokeWidth={2.25} />
+    </a>
+  )
+}
 
 function useIsMobileNav() {
   const [isMobile, setIsMobile] = useState(() =>
@@ -86,6 +111,7 @@ export function Navigation() {
                 )}
               </NavLink>
             ))}
+            <GitHubRepoButton className="ml-2" />
           </nav>
         )}
 
@@ -126,6 +152,9 @@ export function Navigation() {
                 </Link>
               </li>
             ))}
+            <li className="flex justify-center pt-2">
+              <GitHubRepoButton onClick={closeMenu} />
+            </li>
           </ul>
         </nav>
       )}
