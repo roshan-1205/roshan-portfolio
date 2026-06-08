@@ -1,45 +1,23 @@
-import { v2 as cloudinary } from "cloudinary"
+import {
+  ALLOWED_PORTFOLIO_FOLDERS,
+  ensureCloudinaryConfig,
+} from "./cloudinary-server-config"
 
 export type CloudinaryUploadResult = {
   url: string
   publicId: string
 }
 
-function ensureConfig() {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME
-  const apiKey = process.env.CLOUDINARY_API_KEY
-  const apiSecret = process.env.CLOUDINARY_API_SECRET
-
-  if (!cloudName || !apiKey || !apiSecret) {
-    throw new Error(
-      "Missing Cloudinary config. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.",
-    )
-  }
-
-  cloudinary.config({
-    cloud_name: cloudName,
-    api_key: apiKey,
-    api_secret: apiSecret,
-    secure: true,
-  })
-}
-
-const ALLOWED_FOLDERS = new Set([
-  "portfolio-projects",
-  "portfolio-certificates",
-  "portfolio-profile",
-])
-
 export async function uploadPortfolioImage(
   dataUri: string,
   assetId: string,
   folder = "portfolio-projects",
 ): Promise<CloudinaryUploadResult> {
-  ensureConfig()
-
-  if (!ALLOWED_FOLDERS.has(folder)) {
+  if (!ALLOWED_PORTFOLIO_FOLDERS.has(folder)) {
     throw new Error("Invalid upload folder")
   }
+
+  const cloudinary = ensureCloudinaryConfig()
 
   try {
     const result = await cloudinary.uploader.upload(dataUri, {

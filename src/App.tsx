@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
+import { hydrateAllImageRegistries } from "@/lib/image-registry"
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import { AppLayout } from "@/components/layout/AppLayout"
+import { Navigation } from "@/components/layout/Navigation"
 import { ResumeLayout } from "@/components/layout/ResumeLayout"
 import { PortfolioSkeleton } from "@/components/layout/PortfolioSkeleton"
 import { Preloader } from "@/components/layout/Preloader"
@@ -23,6 +25,11 @@ function App() {
     return () => window.clearTimeout(timer)
   }, [phase])
 
+  useEffect(() => {
+    if (phase !== "ready") return
+    void hydrateAllImageRegistries()
+  }, [phase])
+
   const ready = phase === "ready"
 
   return (
@@ -33,14 +40,16 @@ function App() {
 
       <PortfolioSkeleton visible={phase === "skeleton"} />
 
-      <div
-        className={
-          ready
-            ? "opacity-100 transition-opacity duration-700"
-            : "pointer-events-none opacity-0"
-        }
-      >
-        <BrowserRouter>
+      <BrowserRouter>
+        <Navigation />
+
+        <div
+          className={
+            ready
+              ? "opacity-100 transition-opacity duration-700"
+              : "pointer-events-none opacity-0"
+          }
+        >
           <Routes>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
@@ -54,8 +63,8 @@ function App() {
               <Route path="/resume" element={<ResumePage />} />
             </Route>
           </Routes>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     </>
   )
 }

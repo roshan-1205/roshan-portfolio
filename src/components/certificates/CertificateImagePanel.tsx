@@ -13,7 +13,7 @@ export function CertificateImagePanel({
   title,
   defaultImageUrl,
 }: CertificateImagePanelProps) {
-  const { imageUrl, displayUrl, isUploading, error, upload, remove } =
+  const { imageUrl, displayUrl, isUploading, isRemoving, error, upload, remove } =
     useCertificateImage(certificateId, defaultImageUrl)
 
   return (
@@ -27,6 +27,7 @@ export function CertificateImagePanel({
         imageUrl={imageUrl}
         displayUrl={displayUrl}
         isUploading={isUploading}
+        isRemoving={isRemoving}
         error={error}
         onUpload={upload}
         onRemove={remove}

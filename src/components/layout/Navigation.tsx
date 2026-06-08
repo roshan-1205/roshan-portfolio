@@ -1,38 +1,73 @@
-import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Link, NavLink, useLocation } from "react-router-dom"
 import { navLinks } from "@/data/portfolio"
 import { cn } from "@/lib/utils"
-import { easeFilm } from "@/lib/animations"
+
+function useIsMobileNav() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 1024 : true,
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1023px)")
+    const update = () => setIsMobile(media.matches)
+    update()
+    media.addEventListener("change", update)
+    return () => media.removeEventListener("change", update)
+  }, [])
+
+  return isMobile
+}
 
 export function Navigation() {
   const [open, setOpen] = useState(false)
   const { pathname } = useLocation()
+  const isMobile = useIsMobileNav()
+
+  const closeMenu = useCallback(() => setOpen(false), [])
+  const toggleMenu = useCallback(() => setOpen((value) => !value), [])
 
   const isActive = (path: string) => {
     if (path === "/") return pathname === "/"
     return pathname.startsWith(path)
   }
 
-  return (
-    <>
-      <motion.nav
-        className="fixed top-0 right-0 left-0 z-[200] border-b border-border/30 bg-background/60 backdrop-blur-xl"
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: easeFilm }}
-      >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
-          <Link
-            to="/"
-            className="font-mono-ui text-xs tracking-widest text-cyan uppercase"
-            onClick={() => setOpen(false)}
-          >
-            Roshan.dev
-          </Link>
+  useEffect(() => {
+    setOpen(false)
+  }, [pathname])
 
-          <div className="hidden items-center gap-1 md:flex">
+  useEffect(() => {
+    if (!isMobile) setOpen(false)
+  }, [isMobile])
+
+  useEffect(() => {
+    if (!open) return
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeMenu()
+    }
+
+    window.addEventListener("keydown", onKeyDown)
+    return () => window.removeEventListener("keydown", onKeyDown)
+  }, [open, closeMenu])
+
+  return (
+    <header
+      className="pointer-events-auto fixed top-0 right-0 left-0 border-b border-border/30 bg-[#020207]/98 backdrop-blur-xl"
+      style={{ zIndex: 99999, paddingTop: "max(0px, env(safe-area-inset-top))" }}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+        <Link
+          to="/"
+          className="font-mono-ui text-xs tracking-widest text-cyan uppercase"
+          onClick={closeMenu}
+        >
+          Roshan.dev
+        </Link>
+
+        {!isMobile && (
+          <nav className="flex items-center gap-1" aria-label="Main navigation">
             {navLinks.map((link) => (
               <NavLink
                 key={link.path}
@@ -47,61 +82,53 @@ export function Navigation() {
               >
                 {link.label}
                 {isActive(link.path) && (
-                  <motion.span
-                    layoutId="nav-indicator"
-                    className="absolute bottom-0 left-1/2 h-px w-6 -translate-x-1/2 bg-cyan"
-                  />
+                  <span className="absolute bottom-0 left-1/2 h-px w-6 -translate-x-1/2 bg-cyan" />
                 )}
               </NavLink>
             ))}
-          </div>
+          </nav>
+        )}
 
+        {isMobile && (
           <button
             type="button"
-            className="text-foreground md:hidden"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
+            className="inline-flex size-10 items-center justify-center rounded-full border border-border/40 bg-card text-foreground"
+            onClick={toggleMenu}
+            aria-expanded={open}
+            aria-controls="mobile-nav-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
           >
-            {open ? <X size={24} /> : <Menu size={24} />}
+            {open ? <X size={22} /> : <Menu size={22} />}
           </button>
-        </div>
-      </motion.nav>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            className="fixed inset-0 z-[199] flex items-center justify-center bg-background/95 backdrop-blur-2xl md:hidden"
-            initial={{ clipPath: "circle(0% at 90% 5%)" }}
-            animate={{ clipPath: "circle(150% at 90% 5%)" }}
-            exit={{ clipPath: "circle(0% at 90% 5%)" }}
-            transition={{ duration: 0.8, ease: easeFilm }}
-          >
-            <div className="flex flex-col items-center gap-8">
-              {navLinks.map((link, i) => (
-                <motion.div
-                  key={link.path}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08, duration: 0.5 }}
-                >
-                  <Link
-                    to={link.path}
-                    className={cn(
-                      "font-display text-3xl transition-colors",
-                      isActive(link.path)
-                        ? "text-cyan"
-                        : "text-foreground",
-                    )}
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
         )}
-      </AnimatePresence>
-    </>
+      </div>
+
+      {isMobile && open && (
+        <nav
+          id="mobile-nav-menu"
+          aria-label="Mobile navigation"
+          className="border-t border-border/25 bg-[#0d0d1a]/95 px-3 py-2 sm:px-4"
+        >
+          <ul className="flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <li key={link.path}>
+                <Link
+                  to={link.path}
+                  className={cn(
+                    "block rounded-lg px-4 py-3.5 text-center font-mono-ui text-sm tracking-[0.2em] uppercase transition-colors",
+                    isActive(link.path)
+                      ? "bg-cyan/15 text-cyan"
+                      : "text-[#f0ede8] hover:bg-cyan/5 hover:text-cyan",
+                  )}
+                  onClick={closeMenu}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </header>
   )
 }

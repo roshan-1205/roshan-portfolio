@@ -1,3 +1,4 @@
+import { getRegistryImage } from "@/lib/image-registry"
 import type { StoredProjectImage } from "@/types/project"
 
 const STORAGE_KEY = "portfolio-profile-image"
@@ -33,7 +34,8 @@ export function clearProfileImage() {
 }
 
 export function resolveProfileImageUrl(defaultUrl?: string): string | undefined {
-  return getStoredProfileImage()?.url || defaultUrl
+  const fromRegistry = getRegistryImage("portfolio-profile", PROFILE_IMAGE_ID)?.url
+  return fromRegistry || getStoredProfileImage()?.url || defaultUrl
 }
 
 export const profileImageStorage = {

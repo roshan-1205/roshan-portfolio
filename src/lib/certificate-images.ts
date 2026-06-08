@@ -1,3 +1,4 @@
+import { getRegistryImage } from "@/lib/image-registry"
 import type { StoredProjectImage } from "@/types/project"
 
 const STORAGE_KEY = "portfolio-certificate-images"
@@ -41,8 +42,9 @@ export function resolveCertificateImageUrl(
   certificateId: string,
   defaultUrl?: string,
 ): string | undefined {
+  const fromRegistry = getRegistryImage("portfolio-certificates", certificateId)?.url
   const stored = getStoredCertificateImages()[certificateId]?.url
-  return stored || defaultUrl
+  return fromRegistry || stored || defaultUrl
 }
 
 export const certificateImageStorage = {

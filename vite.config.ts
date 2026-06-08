@@ -2,8 +2,14 @@ import path from "path"
 import { defineConfig, loadEnv, type Plugin } from "vite"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
+import {
+  deletePortfolioImage,
+  listPortfolioImages,
+} from "./lib/cloudinary-admin-server"
 import { sendContactEmail } from "./lib/contact-send-server"
 import { uploadPortfolioImage } from "./lib/cloudinary-upload-server"
+import type { PortfolioFolder } from "./lib/cloudinary-server-config"
+import { ALLOWED_PORTFOLIO_FOLDERS } from "./lib/cloudinary-server-config"
 
 function devApiRoutes(): Plugin {
   return {
@@ -79,6 +85,91 @@ function devApiRoutes(): Plugin {
             )
           }
         })
+      })
+
+      server.middlewares.use("/api/images", async (req, res, next) => {
+        const folder = new URL(req.url || "", "http://localhost")
+          .searchParams.get("folder")
+          ?.trim()
+
+        if (req.method === "GET") {
+          if (!folder || !ALLOWED_PORTFOLIO_FOLDERS.has(folder)) {
+            res.statusCode = 400
+            res.setHeader("Content-Type", "application/json")
+            res.end(JSON.stringify({ error: "Invalid folder" }))
+            return
+          }
+
+          try {
+            const images = await listPortfolioImages(folder as PortfolioFolder)
+            res.statusCode = 200
+            res.setHeader("Content-Type", "application/json")
+            res.end(JSON.stringify({ images }))
+          } catch (error) {
+            console.error("Failed to list portfolio images:", error)
+            res.statusCode = 500
+            res.setHeader("Content-Type", "application/json")
+            res.end(
+              JSON.stringify({
+                error:
+                  error instanceof Error
+                    ? error.message
+                    : "Failed to load images",
+              }),
+            )
+          }
+          return
+        }
+
+        if (req.method === "DELETE") {
+          let body = ""
+          req.on("data", (chunk) => {
+            body += chunk
+          })
+
+          req.on("end", async () => {
+            try {
+              const { folder: deleteFolder, assetId } = JSON.parse(body) as {
+                folder?: string
+                assetId?: string
+              }
+
+              if (
+                !deleteFolder ||
+                !assetId ||
+                !ALLOWED_PORTFOLIO_FOLDERS.has(deleteFolder)
+              ) {
+                res.statusCode = 400
+                res.setHeader("Content-Type", "application/json")
+                res.end(JSON.stringify({ error: "Invalid folder or assetId" }))
+                return
+              }
+
+              await deletePortfolioImage(
+                deleteFolder as PortfolioFolder,
+                assetId,
+              )
+              res.statusCode = 200
+              res.setHeader("Content-Type", "application/json")
+              res.end(JSON.stringify({ success: true }))
+            } catch (error) {
+              console.error("Failed to delete portfolio image:", error)
+              res.statusCode = 500
+              res.setHeader("Content-Type", "application/json")
+              res.end(
+                JSON.stringify({
+                  error:
+                    error instanceof Error
+                      ? error.message
+                      : "Failed to delete image",
+                }),
+              )
+            }
+          })
+          return
+        }
+
+        return next()
       })
 
       server.middlewares.use("/api/upload", async (req, res, next) => {

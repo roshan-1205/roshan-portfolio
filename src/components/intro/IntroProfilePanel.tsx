@@ -17,8 +17,9 @@ const SPARKLES = [
 
 export function IntroProfilePanel() {
   const inputRef = useRef<HTMLInputElement>(null)
-  const { displayUrl, hasImage, isUploading, error, upload, remove } =
+  const { displayUrl, hasImage, isUploading, isRemoving, error, upload, remove } =
     useProfileImage()
+  const busy = isUploading || isRemoving
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -47,7 +48,7 @@ export function IntroProfilePanel() {
         accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
         className="sr-only"
         onChange={handleFileChange}
-        disabled={isUploading || !cloudinaryReady}
+        disabled={busy || !cloudinaryReady}
         aria-label="Upload profile photo"
       />
 
@@ -103,7 +104,7 @@ export function IntroProfilePanel() {
             </div>
           </div>
 
-          {isUploading && (
+          {busy && (
             <div className="absolute inset-0 z-20 flex items-center justify-center rounded-full bg-background/50 backdrop-blur-sm">
               <Loader2 className="size-8 animate-spin text-cyan sm:size-10" />
             </div>
@@ -121,7 +122,7 @@ export function IntroProfilePanel() {
             type="button"
             size="icon-xs"
             className="size-7 rounded-full border border-cyan/30 bg-cyan/10 text-cyan shadow-sm hover:border-cyan/50 hover:bg-cyan/20"
-            disabled={isUploading || !cloudinaryReady}
+            disabled={busy || !cloudinaryReady}
             onClick={() => inputRef.current?.click()}
             aria-label={hasImage ? "Change photo" : "Upload photo"}
             title={hasImage ? "Change photo" : "Upload photo"}
@@ -133,12 +134,12 @@ export function IntroProfilePanel() {
             )}
           </Button>
 
-          {hasImage && !isUploading && (
+          {hasImage && !busy && (
             <Button
               type="button"
               size="icon-xs"
               className="size-7 rounded-full border border-destructive/35 bg-destructive/10 text-destructive shadow-sm hover:border-destructive/50 hover:bg-destructive/20"
-              onClick={remove}
+              onClick={() => void remove()}
               aria-label="Remove photo"
               title="Remove photo"
             >

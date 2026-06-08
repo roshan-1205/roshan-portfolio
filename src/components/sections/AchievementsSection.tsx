@@ -40,59 +40,97 @@ export function AchievementsSection() {
 
         <div className="relative">
           <motion.div
-            className="absolute top-0 left-4 w-px origin-top bg-gradient-to-b from-cyan via-purple to-transparent md:left-1/2 md:-translate-x-px"
+            className="absolute top-0 bottom-0 left-[15px] w-px origin-top bg-gradient-to-b from-cyan via-purple to-transparent md:left-1/2 md:-translate-x-px"
             variants={lineGrow}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            style={{ height: "100%" }}
           />
 
           <motion.div
-            className="space-y-12 sm:space-y-16"
+            className="flex flex-col gap-10 sm:gap-14 md:gap-16"
             variants={staggerSlow}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.1 }}
           >
-            {timeline.map((item, i) => (
-              <motion.div
-                key={item.year}
-                variants={slideFromLeft}
-                transition={{ delay: i * 0.2 }}
-                className={`relative grid gap-6 md:grid-cols-2 md:gap-8 ${
-                  i % 2 === 0
-                    ? "md:[&>*:last-child]:pl-12"
-                    : "md:[&>*:first-child]:order-2 md:[&>*:last-child]:pr-12 md:[&>*:last-child]:text-right"
-                }`}
-              >
-                <div className={`${i % 2 === 1 ? "md:order-2" : ""}`}>
-                  <div className="absolute left-4 size-3 -translate-x-1/2 rounded-full border-2 border-cyan bg-background md:left-1/2" />
-                  <span className="font-mono-ui text-sm text-cyan">
-                    {item.year}
-                  </span>
-                  <p className="font-mono-ui text-[10px] tracking-wider text-muted-foreground uppercase">
-                    {item.label}
-                  </p>
-                </div>
+            {timeline.map((item, i) => {
+              const isEven = i % 2 === 0
 
-                <div
-                  className={`ml-10 rounded-xl border border-border/30 bg-card/50 p-4 backdrop-blur-sm sm:p-6 md:ml-0 ${
-                    i % 2 === 1 ? "md:mr-10" : "md:ml-10"
-                  }`}
+              return (
+                <motion.div
+                  key={`${item.year}-${item.label}`}
+                  variants={slideFromLeft}
+                  transition={{ delay: i * 0.2 }}
+                  className="relative"
                 >
-                  <h4 className="font-display text-lg font-light sm:text-xl">
-                    {item.title}
-                  </h4>
-                  <p className="mt-1 font-mono-ui text-xs text-cyan/70">
-                    {item.organization}
-                  </p>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  {/* Mobile + tablet: left rail layout */}
+                  <div className="flex gap-4 sm:gap-5 md:hidden">
+                    <div className="flex w-8 shrink-0 justify-center pt-1">
+                      <div className="relative z-10 size-3 shrink-0 rounded-full border-2 border-cyan bg-background" />
+                    </div>
+
+                    <div className="min-w-0 flex-1 space-y-3">
+                      <div>
+                        <span className="font-mono-ui text-sm text-cyan">
+                          {item.year}
+                        </span>
+                        <p className="mt-0.5 font-mono-ui text-[10px] tracking-wider text-muted-foreground uppercase">
+                          {item.label}
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl border border-border/30 bg-card/50 p-4 backdrop-blur-sm sm:p-5">
+                        <h4 className="font-display text-lg font-light sm:text-xl">
+                          {item.title}
+                        </h4>
+                        <p className="mt-1 font-mono-ui text-xs text-cyan/70">
+                          {item.organization}
+                        </p>
+                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop: alternating two-column layout */}
+                  <div
+                    className={`hidden gap-8 md:grid md:grid-cols-2 ${
+                      isEven
+                        ? "[&>*:last-child]:pl-12"
+                        : "[&>*:first-child]:order-2 [&>*:last-child]:pr-12 [&>*:last-child]:text-right"
+                    }`}
+                  >
+                    <div className={isEven ? "" : "order-2"}>
+                      <div className="absolute left-1/2 size-3 -translate-x-1/2 rounded-full border-2 border-cyan bg-background" />
+                      <span className="font-mono-ui text-sm text-cyan">
+                        {item.year}
+                      </span>
+                      <p className="font-mono-ui text-[10px] tracking-wider text-muted-foreground uppercase">
+                        {item.label}
+                      </p>
+                    </div>
+
+                    <div
+                      className={`rounded-xl border border-border/30 bg-card/50 p-6 backdrop-blur-sm ${
+                        isEven ? "ml-10" : "mr-10"
+                      }`}
+                    >
+                      <h4 className="font-display text-xl font-light">
+                        {item.title}
+                      </h4>
+                      <p className="mt-1 font-mono-ui text-xs text-cyan/70">
+                        {item.organization}
+                      </p>
+                      <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )
+            })}
           </motion.div>
         </div>
 

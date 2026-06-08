@@ -16,9 +16,10 @@ type PortfolioImageUploaderProps = {
   imageUrl?: string
   displayUrl?: string
   isUploading: boolean
+  isRemoving?: boolean
   error: string | null
   onUpload: (file: File) => Promise<unknown>
-  onRemove: () => void
+  onRemove: () => void | Promise<void>
 }
 
 export function PortfolioImageUploader({
@@ -31,15 +32,17 @@ export function PortfolioImageUploader({
   imageUrl,
   displayUrl,
   isUploading,
+  isRemoving = false,
   error,
   onUpload,
   onRemove,
 }: PortfolioImageUploaderProps) {
+  const busy = isUploading || isRemoving
   const inputRef = useRef<HTMLInputElement>(null)
   const hasImage = Boolean(imageUrl && displayUrl)
 
   const openFilePicker = () => {
-    if (!isUploading && cloudinaryReady) {
+    if (!busy && cloudinaryReady) {
       inputRef.current?.click()
     }
   }
@@ -65,7 +68,7 @@ export function PortfolioImageUploader({
         accept="image/png,image/jpeg,image/webp,image/gif,image/avif"
         className="sr-only"
         onChange={handleFileChange}
-        disabled={isUploading || !cloudinaryReady}
+        disabled={busy || !cloudinaryReady}
         aria-label={`Upload image for ${title}`}
       />
 
@@ -92,12 +95,12 @@ export function PortfolioImageUploader({
             type="button"
             className={cn(
               "absolute inset-0 flex w-full flex-col items-center justify-center gap-3 px-4 text-center transition-colors",
-              cloudinaryReady && !isUploading
+              cloudinaryReady && !busy
                 ? "cursor-pointer hover:bg-cyan/5"
                 : "cursor-default",
             )}
             onClick={openFilePicker}
-            disabled={isUploading || !cloudinaryReady}
+            disabled={busy || !cloudinaryReady}
             aria-label={`Upload image for ${title}`}
           >
             {placeholder ?? (
@@ -111,11 +114,11 @@ export function PortfolioImageUploader({
           </button>
         )}
 
-        {isUploading && (
+        {busy && (
           <div className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 bg-background/70 backdrop-blur-sm">
             <Loader2 className="size-8 animate-spin text-cyan" />
             <p className="font-mono-ui text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
-              Uploading to Cloudinary…
+              {isRemoving ? "Removing image…" : "Uploading to Cloudinary…"}
             </p>
           </div>
         )}
@@ -139,7 +142,7 @@ export function PortfolioImageUploader({
               type="button"
               size="icon-xs"
               className="size-7 rounded-full border border-cyan/30 bg-cyan/10 text-cyan shadow-sm hover:border-cyan/50 hover:bg-cyan/20"
-              disabled={isUploading || !cloudinaryReady}
+              disabled={busy || !cloudinaryReady}
               onClick={openFilePicker}
               aria-label={`Replace image for ${title}`}
               title="Replace image"
@@ -154,8 +157,8 @@ export function PortfolioImageUploader({
               type="button"
               size="icon-xs"
               className="size-7 rounded-full border border-destructive/35 bg-destructive/10 text-destructive shadow-sm hover:border-destructive/50 hover:bg-destructive/20"
-              disabled={isUploading}
-              onClick={onRemove}
+              disabled={busy}
+              onClick={() => void onRemove()}
               aria-label={`Remove image for ${title}`}
               title="Remove image"
             >

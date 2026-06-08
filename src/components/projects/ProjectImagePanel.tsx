@@ -15,7 +15,7 @@ export function ProjectImagePanel({
   title,
   defaultImageUrl,
 }: ProjectImagePanelProps) {
-  const { imageUrl, displayUrl, isUploading, error, upload, remove } =
+  const { imageUrl, displayUrl, isUploading, isRemoving, error, upload, remove } =
     useProjectImage(projectId, defaultImageUrl)
 
   return (
@@ -28,6 +28,7 @@ export function ProjectImagePanel({
       imageUrl={imageUrl}
       displayUrl={displayUrl}
       isUploading={isUploading}
+      isRemoving={isRemoving}
       error={error}
       onUpload={upload}
       onRemove={remove}

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { Bot, Play, Volume2, VolumeX } from "lucide-react"
+import { Play, Volume2, VolumeX } from "lucide-react"
 import { avatarIntro } from "@/data/avatar-intro"
 import { RoboticAvatarPresenter } from "@/components/avatar/RoboticAvatarPresenter"
 import { useReducedMotion } from "@/hooks/useReducedMotion"
@@ -93,26 +93,6 @@ export function HeroRobotGuide() {
     >
       <div className="pointer-events-none absolute -top-24 -left-16 size-48 rounded-full bg-cyan/10 blur-[100px]" />
       <div className="pointer-events-none absolute -right-16 -bottom-24 size-48 rounded-full bg-purple/10 blur-[100px]" />
-
-      <div className="relative mb-6 flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <Bot className="size-4 text-cyan" />
-          <span className="font-mono-ui text-xs tracking-[0.3em] text-cyan uppercase">
-            AI Host
-          </span>
-        </div>
-        <div className="h-px flex-1 bg-gradient-to-r from-cyan/50 via-cyan/20 to-transparent" />
-        <div className="flex items-center gap-2">
-          <motion.span
-            className="size-1.5 rounded-full bg-cyan"
-            animate={{ opacity: [0.4, 1, 0.4] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <span className="font-mono-ui text-[9px] tracking-[0.2em] text-muted-foreground uppercase">
-            Online
-          </span>
-        </div>
-      </div>
 
       <div className="relative flex flex-col items-stretch gap-8 lg:flex-row lg:gap-0">
         <motion.div
