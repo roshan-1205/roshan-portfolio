@@ -31,7 +31,8 @@ export const navLinks = [
 ] as const
 
 export const homeIntroduction = [
-  "I fell in love with technology and programming, and I am trying to learn something new every day, I know... 🤷‍♂️",
+  "I fell in love with technology and programming, and I am trying to learn something new every day,",
+  "I know...!!",
   "I am proficient in Node.js, Express, MongoDB, TypeScript, Python, AWS, and Git/GitHub.",
   "My fields of interest are Web Technologies, Artificial Intelligence, Cloud Computing, Full-Stack Development, and building innovative digital products.",
   "My true passion lies in Data Structures & Algorithms, Software Engineering, Problem Solving, and creating scalable solutions that make a real-world impact. 🚀",
