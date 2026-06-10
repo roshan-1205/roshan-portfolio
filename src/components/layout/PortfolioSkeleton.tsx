@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
+import { createPortal } from "react-dom"
 import { Skeleton } from "@/components/ui/skeleton"
-import { NAME_REVEAL_AT } from "@/components/layout/LoadingBrandMark"
-import { BrandedLoadingOverlay } from "@/components/layout/BrandedLoadingOverlay"
+import { easeFilm } from "@/lib/animations"
 
 type PortfolioSkeletonProps = {
   visible: boolean
@@ -30,48 +30,26 @@ function GhostPageLayout() {
 }
 
 export function PortfolioSkeleton({ visible }: PortfolioSkeletonProps) {
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    if (!visible) {
-      setProgress(0)
-      return
-    }
-
-    const duration = 1100
-    const start = performance.now()
-    let frameId = 0
-
-    const tick = (now: number) => {
-      const elapsed = now - start
-      const t = Math.min(1, elapsed / duration)
-      const eased = 1 - Math.pow(1 - t, 2.2)
-      let next = eased * 100
-
-      if (elapsed < 650) {
-        next = Math.min(next, NAME_REVEAL_AT - 1)
-      }
-
-      setProgress(next)
-
-      if (t < 1) {
-        frameId = requestAnimationFrame(tick)
-      } else {
-        setProgress(100)
-      }
-    }
-
-    frameId = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frameId)
-  }, [visible])
-
-  return (
-    <BrandedLoadingOverlay
-      visible={visible}
-      status="Rendering layout"
-      progress={progress}
-      showProgress
-      ghost={<GhostPageLayout />}
-    />
+  const overlay = (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          key="portfolio-skeleton"
+          className="fixed inset-0 z-[100000] bg-background"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25, ease: easeFilm }}
+        >
+          <GhostPageLayout />
+        </motion.div>
+      )}
+    </AnimatePresence>
   )
+
+  if (typeof document !== "undefined") {
+    return createPortal(overlay, document.body)
+  }
+
+  return overlay
 }

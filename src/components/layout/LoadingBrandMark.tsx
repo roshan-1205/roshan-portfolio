@@ -38,6 +38,10 @@ const nameClass: Record<BrandSize, string> = {
 export const loadingScreenPositionClass =
   "absolute inset-0 z-10 flex items-center justify-center px-6 pb-[54vh] md:pb-[48vh]"
 
+/** Home + Resume page-transition logo/name (raised above hero / robot) */
+export const pageTransitionBrandPositionClass =
+  "pb-[22vh] md:pb-[15vh]"
+
 export function shouldRevealLoadingName(
   progress?: number,
   showName?: boolean,
@@ -121,6 +125,7 @@ export function LoadingBrandMark({
   progress,
 }: LoadingBrandMarkProps) {
   const revealName = shouldRevealLoadingName(progress, showName)
+  const instantName = showName === true
 
   return (
     <div className={cn("flex flex-col items-center text-center", className)}>
@@ -130,13 +135,16 @@ export function LoadingBrandMark({
         {revealName && (
           <motion.div
             key="loading-brand-name"
-            initial={{ opacity: 0, height: 0 }}
+            initial={instantName ? false : { opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: easeFilm }}
+            transition={{ duration: instantName ? 0.2 : 0.35, ease: easeFilm }}
             className={cn(showLogo && "mt-6")}
           >
-            <LoadingBrandName size={logoSize} animate={animateName || revealName} />
+            <LoadingBrandName
+              size={logoSize}
+              animate={!instantName && (animateName || revealName)}
+            />
           </motion.div>
         )}
       </AnimatePresence>

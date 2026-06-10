@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion"
+import { createPortal } from "react-dom"
 import { ScanOverlay } from "@/components/effects/ScanOverlay"
 import { BrandedLoadingPanel } from "@/components/layout/BrandedLoadingPanel"
 import { useSimulatedLoadingProgress } from "@/hooks/useSimulatedLoadingProgress"
@@ -14,6 +15,9 @@ type BrandedLoadingOverlayProps = {
   showScanOverlay?: boolean
   mode?: "fixed" | "absolute"
   className?: string
+  contentClassName?: string
+  showName?: boolean
+  logoSize?: "sm" | "md" | "lg"
   ghost?: React.ReactNode
 }
 
@@ -26,14 +30,18 @@ export function BrandedLoadingOverlay({
   showScanOverlay = true,
   mode = "fixed",
   className,
+  contentClassName,
+  showName,
+  logoSize = "md",
   ghost,
 }: BrandedLoadingOverlayProps) {
   const simulatedProgress = useSimulatedLoadingProgress(
     visible && progress === undefined && simulateProgress,
   )
   const effectiveProgress = progress ?? simulatedProgress
+  const instantReveal = showName === true
 
-  return (
+  const overlay = (
     <AnimatePresence>
       {visible && (
         <motion.div
@@ -41,37 +49,52 @@ export function BrandedLoadingOverlay({
           className={cn(
             "overflow-hidden bg-background",
             mode === "fixed"
-              ? "fixed inset-0 z-[280]"
+              ? "fixed inset-0 z-[100000]"
               : "absolute inset-0 z-20",
             className,
           )}
-          initial={{ opacity: 0 }}
+          initial={{ opacity: instantReveal ? 1 : 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.35, ease: easeFilm }}
+          transition={{
+            duration: instantReveal ? 0.15 : 0.35,
+            ease: easeFilm,
+          }}
         >
           {ghost && (
-            <div className="pointer-events-none absolute inset-0 opacity-[0.12] blur-[1px]">
+            <div className="pointer-events-none absolute inset-0 opacity-[0.08] blur-[1px]">
               {ghost}
             </div>
           )}
-
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background/95" />
 
           {showScanOverlay && (
             <ScanOverlay progress={effectiveProgress} status={status} />
           )}
 
-          <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
+          <div
+            className={cn(
+              "absolute inset-0 z-30 flex items-center justify-center px-6",
+              contentClassName,
+            )}
+          >
             <BrandedLoadingPanel
               status={status}
               progress={effectiveProgress}
               simulateProgress={false}
               showProgress={showProgress}
+              showName={showName}
+              logoSize={logoSize}
+              instantReveal={instantReveal}
             />
           </div>
         </motion.div>
       )}
     </AnimatePresence>
   )
+
+  if (mode === "fixed" && typeof document !== "undefined") {
+    return createPortal(overlay, document.body)
+  }
+
+  return overlay
 }

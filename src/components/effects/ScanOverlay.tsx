@@ -20,7 +20,7 @@ export function ScanOverlay({
 
       <motion.div
         className="scan-line-h absolute left-0 w-full"
-        animate={{ top: ["-4%", "104%"] }}
+        animate={{ top: ["-2%", "94%"] }}
         transition={{ duration: 2.4, repeat: Infinity, ease: "linear" }}
       />
 

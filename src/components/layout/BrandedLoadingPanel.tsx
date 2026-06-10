@@ -11,6 +11,8 @@ type BrandedLoadingPanelProps = {
   logoSize?: "sm" | "md" | "lg"
   showProgress?: boolean
   simulateProgress?: boolean
+  showName?: boolean
+  instantReveal?: boolean
 }
 
 export function BrandedLoadingPanel({
@@ -20,6 +22,8 @@ export function BrandedLoadingPanel({
   logoSize = "md",
   showProgress = false,
   simulateProgress = true,
+  showName,
+  instantReveal = false,
 }: BrandedLoadingPanelProps) {
   const simulatedProgress = useSimulatedLoadingProgress(
     progress === undefined && simulateProgress,
@@ -34,11 +38,15 @@ export function BrandedLoadingPanel({
   return (
     <motion.div
       className={cn("flex flex-col items-center text-center", className)}
-      initial={{ opacity: 0, y: 8 }}
+      initial={instantReveal ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: easeFilm }}
+      transition={{ duration: instantReveal ? 0.15 : 0.45, ease: easeFilm }}
     >
-      <LoadingBrandMark logoSize={logoSize} progress={effectiveProgress} />
+      <LoadingBrandMark
+        logoSize={logoSize}
+        progress={effectiveProgress}
+        showName={showName}
+      />
 
       <motion.p
         className="mt-8 font-mono-ui text-[10px] tracking-[0.35em] text-cyan/80 uppercase"
