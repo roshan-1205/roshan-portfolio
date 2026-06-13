@@ -18,7 +18,7 @@ export const personal = {
   cvFileName: "Roshan-Kumar-Singh-CV.pdf",
   /** Set your profile photo URL here (Cloudinary, Imgur, etc.) */
   profileImageUrl:
-    "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780871614/portfolio-projects/intro-profile.jpg",
+    "https://res.cloudinary.com/dxwixlgfr/image/upload/v1781379718/Untitled_-_14_June_2026_at_01.08.12.jpg_em3ilq.jpg",
 }
 
 export const navLinks = [
