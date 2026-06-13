@@ -120,33 +120,35 @@ export const skillCategories = [
 
 export const featuredProjects: FeaturedProject[] = [
   {
-    id: "vaani",
+    id: "aks-beauty-hut",
     number: "01",
-    category: "AI · VOICE · CIVIC TECH · 2026",
-    title: "VAANI — AI-Powered Civic Engagement",
+    category: "E-COMMERCE · FULL STACK · 2026",
+    title: "AKS Beauty Hut — E-Commerce Website",
     description:
-      "I built VAANI so underserved communities could reach government services through phone calls and WhatsApp voice — in local languages, on low bandwidth, with no apps or forms required.",
+      "Modern beauty products e-commerce website built for a local retail business — featuring a responsive product catalog, smooth shopping experience, and a full-stack MERN architecture.",
     techStack: [
       "React",
       "Node.js",
-      "FastAPI",
-      "AWS Bedrock",
-      "LangChain",
-      "Firebase",
-      "Python",
+      "MongoDB",
+      "Express",
+      "Tailwind CSS",
+      "JWT Auth",
     ],
     features: [
-      "Voice AI with multilingual support (Hindi, English, Hinglish)",
-      "Geolocation mapping for civic issue routing",
-      "Smart notifications & real-time issue tracking",
-      "Admin analytics dashboard with interactive charts",
-      "JWT security & Firebase authentication",
-      "Deployed on Firebase with AWS Amplify integration",
+      "Responsive product catalog with category browsing",
+      "Shopping cart & checkout flow",
+      "User authentication & order management",
+      "Admin panel for product & inventory management",
+      "Mobile-first design for retail customers",
+      "Full-stack MERN deployment",
     ],
-    liveUrl: "https://vaani-ai-assistant-419de.web.app",
-    githubUrl: "https://github.com/roshan-1205/VAANI",
+    liveUrl: "https://aksbeautyhut.vercel.app/",
+    githubUrl: "https://github.com/roshan-1205/AKS-Beauty-Hut",
     imageUrl:
-      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780868547/portfolio-projects/vaani.png",
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1781376839/Beige_Minimalist_Mockup_Instagram_Post_q7p5rc.jpg",
+
+
+    
   },
   {
     id: "vibely",
@@ -175,7 +177,7 @@ export const featuredProjects: FeaturedProject[] = [
     liveUrl: "https://vibely-frontend-orpin.vercel.app",
     githubUrl: "https://github.com/roshan-1205/VIBELY",
     imageUrl:
-      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780868780/portfolio-projects/vibely.png",
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1781378512/Brown_Modern_Webdesign_Portfolio_Tablet_Mockup_Facebook_Post_p5dtwx.jpg",
   },
   {
     id: "pharmily",
@@ -237,32 +239,33 @@ export const featuredProjects: FeaturedProject[] = [
       "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780878537/portfolio-projects/fleetwatch.png",
   },
   {
-    id: "aks-beauty-hut",
+    id: "vaani",
     number: "05",
-    category: "E-COMMERCE · FULL STACK · 2026",
-    title: "AKS Beauty Hut — E-Commerce Website",
+    category: "AI · VOICE · CIVIC TECH · 2026",
+    title: "VAANI — AI-Powered Civic Engagement",
     description:
-      "Modern beauty products e-commerce website built for a local retail business — featuring a responsive product catalog, smooth shopping experience, and a full-stack MERN architecture.",
+      "I built VAANI so underserved communities could reach government services through phone calls and WhatsApp voice — in local languages, on low bandwidth, with no apps or forms required.",
     techStack: [
       "React",
       "Node.js",
-      "MongoDB",
-      "Express",
-      "Tailwind CSS",
-      "JWT Auth",
+      "FastAPI",
+      "AWS Bedrock",
+      "LangChain",
+      "Firebase",
+      "Python",
     ],
     features: [
-      "Responsive product catalog with category browsing",
-      "Shopping cart & checkout flow",
-      "User authentication & order management",
-      "Admin panel for product & inventory management",
-      "Mobile-first design for retail customers",
-      "Full-stack MERN deployment",
+      "Voice AI with multilingual support (Hindi, English, Hinglish)",
+      "Geolocation mapping for civic issue routing",
+      "Smart notifications & real-time issue tracking",
+      "Admin analytics dashboard with interactive charts",
+      "JWT security & Firebase authentication",
+      "Deployed on Firebase with AWS Amplify integration",
     ],
-    liveUrl: "https://aksbeautyhut.vercel.app/",
-    githubUrl: "https://github.com/roshan-1205/AKS-Beauty-Hut",
+    liveUrl: "https://vaani-ai-assistant-419de.web.app",
+    githubUrl: "https://github.com/roshan-1205/VAANI",
     imageUrl:
-      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1780878498/portfolio-projects/aks-beauty-hut.png",
+      "https://res.cloudinary.com/dxwixlgfr/image/upload/v1781377765/Mockup_Page_xfzh1w.jpg",
   },
 ]
 
