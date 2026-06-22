@@ -187,7 +187,7 @@ export function ContactSection() {
                 </Label>
                 <Input
                   id="name"
-                  placeholder="John Doe"
+                  placeholder="Your name"
                   autoComplete="name"
                   className={cn(
                     fieldClassName,
@@ -217,7 +217,7 @@ export function ContactSection() {
                   type="email"
                   inputMode="email"
                   autoComplete="email"
-                  placeholder="john@example.com"
+                  placeholder="name@mail.com"
                   className={cn(
                     fieldClassName,
                     touchedFields.email &&
