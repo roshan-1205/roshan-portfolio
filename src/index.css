@@ -215,7 +215,21 @@
   }
 
   .robot-chest-logo {
-    top: 46%;
+    top: 44%;
+    transition: top 0.4s ease-out;
+  }
+
+  /* Ensure the logo tracks with the robot viewport responsively */
+  @media (max-width: 639px) {
+    .robot-chest-logo {
+      top: 43%;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .robot-chest-logo {
+      top: 45%;
+    }
   }
 
   .skeleton-shimmer {

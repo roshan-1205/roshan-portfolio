@@ -1,5 +1,3 @@
-import { personal } from "@/data/portfolio"
-
 export const avatarIntro = {
   /**
    * Optional: drop a `.glb` URL here after generating a likeness from your photo
@@ -14,9 +12,9 @@ export const avatarIntro = {
   photoUrl: null as string | null,
 
   lines: [
-    `Hey there! Welcome to my portfolio.`,
-    `I'm ${personal.name} — a full-stack & AI engineer from ${personal.location}.`,
-    `I build real-time systems with React, FastAPI, Python, NLP, and AWS.`,
-    `Let me walk you through my work — tap below when you're ready.`,
+    `Hi there — happy you found your way here.`,
+    `I'm Roshan Kumar Singh, a full-stack developer working across MERN and applied AI — from real-time systems to fine-tuned language models.`,
+    `My work has taken me to the finals of two national hackathons, including a top 500 finish out of 30,000+ teams at Scaler's AI Hackathon.`,
+    `I'm graduating October 2027, looking for a team building software people actually need.`,
   ],
 }
