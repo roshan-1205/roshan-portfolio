@@ -2,7 +2,6 @@ import { motion, useScroll, useTransform } from "framer-motion"
 import { ExternalLink, Trash2 } from "lucide-react"
 import { GitHubIcon } from "@/components/icons/SocialIcons"
 import { useRef } from "react"
-import { AddProjectForm } from "@/components/projects/AddProjectForm"
 import { ProjectImagePanel } from "@/components/projects/ProjectImagePanel"
 import { useProjectsList } from "@/hooks/useProjectsList"
 import type { FeaturedProject } from "@/types/project"
@@ -176,10 +175,6 @@ export function ProjectsSection() {
               onDelete={project.isCustom ? deleteProject : undefined}
             />
           ))}
-        </div>
-
-        <div className="mt-16 flex justify-center md:mt-20">
-          <AddProjectForm onAdd={addProject} />
         </div>
       </div>
     </section>

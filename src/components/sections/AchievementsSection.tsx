@@ -1,6 +1,5 @@
 import { motion } from "framer-motion"
 import { Award, Trash2 } from "lucide-react"
-import { AddCertificateForm } from "@/components/certificates/AddCertificateForm"
 import { CertificateImagePanel } from "@/components/certificates/CertificateImagePanel"
 import { timeline } from "@/data/portfolio"
 import { useCertificatesList } from "@/hooks/useCertificatesList"
@@ -226,10 +225,6 @@ export function AchievementsSection() {
               </motion.div>
             ))}
           </motion.div>
-
-          <div className="mt-8 flex justify-center sm:mt-10">
-            <AddCertificateForm onAdd={addCertificate} />
-          </div>
         </motion.div>
       </div>
     </section>

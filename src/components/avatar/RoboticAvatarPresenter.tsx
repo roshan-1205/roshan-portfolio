@@ -29,7 +29,7 @@ export function RoboticAvatarPresenter({
       <div className="overflow-hidden rounded-xl border border-cyan/25 bg-card/70 shadow-[0_0_30px_rgba(0,212,255,0.06)] backdrop-blur-sm">
         <div className="flex items-center justify-between border-b border-cyan/15 bg-background/40 px-4 py-2.5">
           <span className="font-mono-ui text-[9px] tracking-[0.25em] text-cyan uppercase">
-            Unit · {personal.name.split(" ")[0]}-BOT
+            Welcome · Portfolio
           </span>
           <div className="flex items-center gap-2">
             <motion.span
@@ -42,24 +42,12 @@ export function RoboticAvatarPresenter({
               }}
             />
             <span className="font-mono-ui text-[9px] tracking-[0.15em] text-muted-foreground uppercase">
-              {speaking ? "Transmitting" : "Standby"}
+              {speaking ? "Active" : "Ready"}
             </span>
           </div>
         </div>
 
-        <div className="relative h-[min(52vw,400px)] min-h-[320px] w-full">
-          {reducedMotion ? (
-            <div className="robot-viewport-inner spline-robot-theme flex h-full items-center justify-center p-4">
-              <img
-                src={robotRef}
-                alt="Robot assistant"
-                className="h-full w-full object-contain object-center"
-              />
-            </div>
-          ) : (
-            <SplineRobotScene className="h-full" />
-          )}
-
+        <div className="relative h-[min(52vw,400px)] min-h-[320px] w-full flex items-center justify-center">
           <RobotChestLogo />
 
           <div className="pointer-events-none absolute inset-3 z-10 rounded-lg border border-cyan/15">
