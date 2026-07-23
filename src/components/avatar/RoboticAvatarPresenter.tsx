@@ -1,9 +1,5 @@
 import { motion } from "framer-motion"
-import { personal } from "@/data/portfolio"
 import { RobotChestLogo } from "@/components/avatar/RobotChestLogo"
-import { SplineRobotScene } from "@/components/avatar/SplineRobotScene"
-import { useReducedMotion } from "@/hooks/useReducedMotion"
-import robotRef from "@/assets/avatar/white-ball-robot-ref.png"
 
 interface RoboticAvatarPresenterProps {
   speaking: boolean
@@ -17,8 +13,6 @@ export function RoboticAvatarPresenter({
   charProgress,
   className,
 }: RoboticAvatarPresenterProps) {
-  const reducedMotion = useReducedMotion()
-
   const mouthBars = Math.min(
     5,
     Math.max(1, Math.floor((charProgress % 12) / 3) + 1),

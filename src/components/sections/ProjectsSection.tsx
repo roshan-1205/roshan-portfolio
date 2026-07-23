@@ -145,7 +145,7 @@ function FeaturedProject({
 }
 
 export function ProjectsSection() {
-  const { projects, addProject, deleteProject } = useProjectsList()
+  const { projects, deleteProject } = useProjectsList()
 
   return (
     <section

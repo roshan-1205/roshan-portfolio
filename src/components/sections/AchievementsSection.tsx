@@ -16,7 +16,7 @@ import {
 } from "@/lib/animations"
 
 export function AchievementsSection() {
-  const { certs, addCertificate, deleteCertificate } = useCertificatesList()
+  const { certs, deleteCertificate } = useCertificatesList()
 
   return (
     <section
