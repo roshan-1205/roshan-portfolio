@@ -15,6 +15,143 @@ function devApiRoutes(): Plugin {
   return {
     name: "dev-api-routes",
     configureServer(server) {
+      server.middlewares.use("/api/chat", async (req, res, next) => {
+        if (req.method !== "POST") return next()
+
+        let body = ""
+        req.on("data", (chunk) => {
+          body += chunk
+        })
+
+        req.on("end", async () => {
+          try {
+            const { message, history } = JSON.parse(body) as {
+              message?: string
+              history?: Array<{ role: string; content: string }>
+            }
+
+            if (!message?.trim()) {
+              res.statusCode = 400
+              res.setHeader("Content-Type", "application/json")
+              res.end(JSON.stringify({ error: "Message is required" }))
+              return
+            }
+
+            if (message.length > 800) {
+              res.statusCode = 400
+              res.setHeader("Content-Type", "application/json")
+              res.end(
+                JSON.stringify({ error: "Message too long (max 800 characters)" }),
+              )
+              return
+            }
+
+            const apiKey = env.ANTHROPIC_API_KEY
+            if (!apiKey) {
+              console.error("ANTHROPIC_API_KEY not found in environment")
+              res.statusCode = 500
+              res.setHeader("Content-Type", "application/json")
+              res.end(
+                JSON.stringify({
+                  error:
+                    "AI assistant is temporarily unavailable. Please use the contact form to reach out directly.",
+                }),
+              )
+              return
+            }
+
+            console.log("Chat request received:", {
+              messageLength: message.length,
+              historyLength: history?.length ?? 0,
+              apiKeyPresent: !!apiKey,
+              apiKeyPrefix: apiKey.substring(0, 15) + "...",
+            })
+
+            const validHistory = Array.isArray(history)
+              ? history
+                  .filter(
+                    (msg): msg is { role: "user" | "assistant"; content: string } =>
+                      typeof msg === "object" &&
+                      msg !== null &&
+                      (msg.role === "user" || msg.role === "assistant") &&
+                      typeof msg.content === "string",
+                  )
+                  .slice(-12)
+              : []
+
+            const messages = [
+              ...validHistory.map((msg) => ({
+                role: msg.role,
+                content: msg.content,
+              })),
+              { role: "user" as const, content: message.trim() },
+            ]
+
+            // Import chatbotContext dynamically
+            const { chatbotContext } = await import("./src/data/chatbotContext")
+
+            const response = await fetch("https://api.anthropic.com/v1/messages", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": apiKey,
+                "anthropic-version": "2023-06-01",
+              },
+              body: JSON.stringify({
+                model: "claude-3-5-sonnet-20241022",
+                max_tokens: 400,
+                system: chatbotContext,
+                messages,
+              }),
+            })
+
+            if (!response.ok) {
+              const errorData = (await response.json().catch(() => ({}))) as {
+                error?: { message?: string }
+              }
+              const errorMessage =
+                errorData?.error?.message ?? `HTTP ${response.status}`
+
+              console.error(
+                `Anthropic API error: ${response.status} - ${errorMessage}`,
+              )
+
+              res.statusCode = 500
+              res.setHeader("Content-Type", "application/json")
+              res.end(
+                JSON.stringify({
+                  error:
+                    "AI assistant encountered an error. Please try again or use the contact form.",
+                }),
+              )
+              return
+            }
+
+            const data = (await response.json()) as {
+              content?: Array<{ type: string; text: string }>
+            }
+
+            const reply =
+              data.content?.[0]?.text ??
+              "I couldn't generate a response. Please try again."
+
+            res.statusCode = 200
+            res.setHeader("Content-Type", "application/json")
+            res.end(JSON.stringify({ reply }))
+          } catch (error) {
+            console.error("Chat API handler failed:", error)
+            res.statusCode = 500
+            res.setHeader("Content-Type", "application/json")
+            res.end(
+              JSON.stringify({
+                error:
+                  "Failed to connect to AI assistant. Please check your network or try again later.",
+              }),
+            )
+          }
+        })
+      })
+
       server.middlewares.use("/api/contact", async (req, res, next) => {
         if (req.method !== "POST") return next()
 
@@ -235,6 +372,7 @@ export default defineConfig(({ mode }) => {
   process.env.CONTACT_TO_EMAIL = env.CONTACT_TO_EMAIL
   process.env.CLOUDINARY_API_KEY = env.CLOUDINARY_API_KEY
   process.env.CLOUDINARY_API_SECRET = env.CLOUDINARY_API_SECRET
+  process.env.ANTHROPIC_API_KEY = env.ANTHROPIC_API_KEY
 
   return {
     plugins: [react(), tailwindcss(), devApiRoutes()],

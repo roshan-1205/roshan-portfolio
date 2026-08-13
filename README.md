@@ -1,6 +1,6 @@
 # Roshan Kumar Singh — Portfolio
 
-A cinematic, production-ready developer portfolio built with React, TypeScript, and Vite. Showcases featured projects, skills, certifications, and a real-time contact form — with Cloudinary-powered image uploads, scan-style loading animations, and an interactive 3D robot guide.
+A cinematic, production-ready developer portfolio built with React, TypeScript, and Vite. Showcases featured projects, skills, certifications, and a real-time contact form — with Cloudinary-powered image uploads, scan-style loading animations, and an AI-powered chatbot assistant (Senku) that answers visitor questions about Roshan's projects and skills.
 
 **Live site:** [roshan-portfolio-indol.vercel.app](https://roshan-portfolio-indol.vercel.app)
 
@@ -9,7 +9,7 @@ A cinematic, production-ready developer portfolio built with React, TypeScript, 
 ## Features
 
 ### Portfolio sections
-- **Hero** — Intro, stats, CV download, 3D Spline robot guide
+- **Hero** — Intro, stats, CV download, Senku AI chatbot assistant
 - **About** — Mission statement and tech pillars
 - **Skills** — Animated skill bars across AI/ML, development, data, and cloud
 - **Projects** — Featured work with live links, GitHub, tech stack, and feature lists
@@ -49,7 +49,7 @@ A cinematic, production-ready developer portfolio built with React, TypeScript, 
 | Frontend | React 19, TypeScript, Vite 8, Tailwind CSS 4 |
 | UI | shadcn/ui (Radix), Lucide icons, CVA |
 | Animation | Framer Motion |
-| 3D | Spline, React Three Fiber, Three.js |
+| AI Chat | Anthropic Claude (server-side API) |
 | Forms | React Hook Form, Zod |
 | Media | Cloudinary (direct browser upload) |
 | API | Vercel serverless (`/api/upload`, `/api/contact`) |
@@ -62,6 +62,7 @@ A cinematic, production-ready developer portfolio built with React, TypeScript, 
 ```
 roshan-portfolio/
 ├── api/                    # Vercel serverless routes
+│   ├── chat.ts             # AI chatbot (Anthropic Claude)
 │   ├── upload.ts           # Cloudinary upload fallback
 │   └── contact.ts          # Contact form server fallback
 ├── lib/                    # Server-side helpers
@@ -77,7 +78,7 @@ roshan-portfolio/
 │   │   ├── certificates/ # Certificate gallery + AddCertificateForm
 │   │   ├── shared/         # PortfolioImageUploader
 │   │   ├── layout/         # Preloader, Navigation, Skeleton
-│   │   ├── avatar/         # 3D robot / Spline scenes
+│   │   ├── avatar/         # Senku AI chatbot widget
 │   │   └── effects/        # ScanOverlay, FilmGrain, etc.
 │   ├── data/portfolio.ts   # Site content (projects, skills, personal info)
 │   ├── hooks/              # Image upload, lists, motion helpers
@@ -153,6 +154,14 @@ WEB3FORMS_ACCESS_KEY=               # server-side fallback
 
 FormSubmit sends to the email in `src/data/portfolio.ts`. On first use, check your inbox for a FormSubmit activation link.
 
+### AI Chatbot - Senku (required for chat widget)
+
+```env
+ANTHROPIC_API_KEY=your_anthropic_api_key
+```
+
+> Server-side only. **Never** prefix with `VITE_` — that would expose the key in the client bundle. Set this in Vercel → Project → Settings → Environment Variables.
+
 ---
 
 ## Deploy on Vercel
@@ -194,7 +203,7 @@ For permanent project/certificate images visible to all visitors, either upload 
 ## Author
 
 **Roshan Kumar Singh**  
-Technology Strategist · AI Engineer · Full-Stack Developer
+Early-career Full-Stack Developer · Applied AI · B.Tech CSE
 
 - Portfolio: [roshan-portfolio-indol.vercel.app](https://roshan-portfolio-indol.vercel.app)
 - GitHub: [@roshan-1205](https://github.com/roshan-1205)

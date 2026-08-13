@@ -64,19 +64,12 @@ export const professionalSkillset: TechSkill[] = [
 export const toolsUsed: TechSkill[] = [
   { label: "MongoDB", devicon: "mongodb" },
   { label: "PostgreSQL", devicon: "postgresql" },
-  { label: "Redis", devicon: "redis" },
   {
     label: "AWS",
     iconUrl: "https://www.vectorlogo.zone/logos/amazon_aws/amazon_aws-icon.svg",
     logoClass: "size-10 object-contain sm:size-11",
   },
   { label: "Docker", devicon: "docker" },
-  {
-    label: "Kubernetes",
-    devicon: "kubernetes",
-    iconFile: "kubernetes-plain",
-  },
-  { label: "Terraform", devicon: "terraform" },
   {
     label: "GitHub Actions",
     devicon: "githubactions",

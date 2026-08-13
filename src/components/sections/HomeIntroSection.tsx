@@ -6,7 +6,7 @@ import { fadeUp, staggerSlow } from "@/lib/animations"
 
 export function HomeIntroSection() {
   return (
-    <section className="relative border-t border-border/20 bg-card py-24 md:py-32">
+    <section id="intro" className="relative border-t border-border/20 bg-card py-24 md:py-32">
       <div className="pointer-events-none absolute -right-8 top-12 font-display text-[18vw] font-light leading-none text-foreground/[0.02] select-none md:text-[12vw]">
         INTRO
       </div>

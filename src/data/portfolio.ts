@@ -58,7 +58,7 @@ export const techPillars = [
   },
   {
     icon: "☁️",
-    stack: "Docker · Kubernetes · Terraform",
+    stack: "Docker · AWS · Serverless",
     focus: "Multi-region · resilient by design",
   },
   {
@@ -99,7 +99,6 @@ export const skillCategories = [
     skills: [
       { name: "MongoDB", level: 88 },
       { name: "PostgreSQL", level: 82 },
-      { name: "Redis", level: 80 },
       { name: "DynamoDB", level: 75 },
       { name: "Pinecone", level: 78 },
     ],
@@ -110,8 +109,6 @@ export const skillCategories = [
     skills: [
       { name: "AWS", level: 85 },
       { name: "Docker", level: 82 },
-      { name: "Kubernetes", level: 75 },
-      { name: "Terraform", level: 72 },
       { name: "Serverless", level: 80 },
       { name: "GitHub Actions", level: 78 },
     ],

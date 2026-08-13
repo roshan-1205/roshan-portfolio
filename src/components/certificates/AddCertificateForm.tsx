@@ -149,7 +149,7 @@ export function AddCertificateForm({ onAdd }: AddCertificateFormProps) {
             id="cert-skills"
             value={form.skills}
             onChange={(e) => update("skills", e.target.value)}
-            placeholder="AWS, Docker, Kubernetes"
+            placeholder="AWS, Docker, MongoDB"
             className="h-11 text-base sm:text-sm"
           />
         </div>
