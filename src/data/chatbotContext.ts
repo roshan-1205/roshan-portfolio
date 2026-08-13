@@ -25,7 +25,7 @@ export const chatbotContext = `You are Senku, Roshan's digital companion and gui
 ---
 
 # EDUCATION
-- 3rd-year B.Tech CSE student at AKS University, Satna, Madhya Pradesh, India
+- 4th-year B.Tech CSE student at AKS University, Satna, Madhya Pradesh, India
 - Enrolled: September 2023 – October 2027
 - CGPA: 7.44
 
