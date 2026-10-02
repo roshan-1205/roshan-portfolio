@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
+import { GoogleGenerativeAI } from "@google/generative-ai"
 import { chatbotContext } from "../src/data/chatbotContext"
 
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY
-const ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
-const MODEL = "claude-3-5-sonnet-20241022"
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
+const MODEL = "gemini-1.5-flash"
 const MAX_TOKENS = 400
 const MAX_MESSAGE_LENGTH = 800
 const MAX_HISTORY_MESSAGES = 12
@@ -13,24 +13,14 @@ interface ChatMessage {
   content: string
 }
 
-interface AnthropicMessage {
-  role: "user" | "assistant"
-  content: string
-}
-
-interface AnthropicResponse {
-  content: Array<{ type: string; text: string }>
-  error?: { message: string }
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" })
   }
 
   // Check API key early
-  if (!ANTHROPIC_API_KEY) {
-    console.error("ANTHROPIC_API_KEY is not configured")
+  if (!GOOGLE_API_KEY) {
+    console.error("GOOGLE_API_KEY is not configured")
     return res.status(500).json({
       error:
         "AI assistant is temporarily unavailable. Please use the contact form to reach out directly.",
@@ -66,58 +56,59 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .slice(-MAX_HISTORY_MESSAGES)
     : []
 
-  // Build messages array
-  const messages: AnthropicMessage[] = [
-    ...validHistory.map((msg) => ({
-      role: msg.role,
-      content: msg.content,
-    })),
-    { role: "user" as const, content: message.trim() },
-  ]
-
   try {
-    const response = await fetch(ANTHROPIC_API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: MAX_TOKENS,
-        system: chatbotContext,
-        messages,
-      }),
+    // Initialize Google Generative AI
+    const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY)
+    const model = genAI.getGenerativeModel({ 
+      model: MODEL,
+      systemInstruction: chatbotContext,
     })
 
-    if (!response.ok) {
-      const errorData = (await response.json().catch(() => ({}))) as {
-        error?: { message?: string }
-      }
-      const errorMessage =
-        errorData?.error?.message ?? `HTTP ${response.status}`
+    // Build chat history for Google's format
+    const chatHistory = validHistory.map((msg) => ({
+      role: msg.role === "assistant" ? "model" : "user",
+      parts: [{ text: msg.content }],
+    }))
 
-      console.error(
-        `Anthropic API error: ${response.status} - ${errorMessage}`,
-      )
+    // Start chat with history
+    const chat = model.startChat({
+      history: chatHistory,
+      generationConfig: {
+        maxOutputTokens: MAX_TOKENS,
+        temperature: 0.7,
+      },
+    })
 
-      // User-facing error message
+    // Send message and get response
+    const result = await chat.sendMessage(message.trim())
+    const response = await result.response
+    const reply = response.text()
+
+    if (!reply) {
       return res.status(500).json({
-        error:
-          "AI assistant encountered an error. Please try again or use the contact form.",
+        error: "I couldn't generate a response. Please try again.",
       })
     }
-
-    const data = (await response.json()) as AnthropicResponse
-
-    const reply =
-      data.content?.[0]?.text ??
-      "I couldn't generate a response. Please try again."
 
     return res.status(200).json({ reply })
   } catch (error) {
     console.error("Chat API handler failed:", error)
+    
+    // Check for specific Google API errors
+    const errorMessage = error instanceof Error ? error.message : "Unknown error"
+    
+    if (errorMessage.includes("API_KEY_INVALID") || errorMessage.includes("authentication")) {
+      return res.status(500).json({
+        error: "AI assistant configuration error. Please contact the site owner.",
+      })
+    }
+
+    if (errorMessage.includes("quota") || errorMessage.includes("rate limit")) {
+      return res.status(429).json({
+        error: "AI assistant is busy. Please try again in a moment.",
+      })
+    }
+
     return res.status(500).json({
       error:
         "Failed to connect to AI assistant. Please check your network or try again later.",
