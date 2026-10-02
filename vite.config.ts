@@ -46,9 +46,9 @@ function devApiRoutes(): Plugin {
               return
             }
 
-            const apiKey = env.ANTHROPIC_API_KEY
+            const apiKey = env.GOOGLE_API_KEY
             if (!apiKey) {
-              console.error("ANTHROPIC_API_KEY not found in environment")
+              console.error("GOOGLE_API_KEY not found in environment")
               res.statusCode = 500
               res.setHeader("Content-Type", "application/json")
               res.end(
@@ -64,7 +64,6 @@ function devApiRoutes(): Plugin {
               messageLength: message.length,
               historyLength: history?.length ?? 0,
               apiKeyPresent: !!apiKey,
-              apiKeyPrefix: apiKey.substring(0, 15) + "...",
             })
 
             const validHistory = Array.isArray(history)
@@ -79,61 +78,36 @@ function devApiRoutes(): Plugin {
                   .slice(-12)
               : []
 
-            const messages = [
-              ...validHistory.map((msg) => ({
-                role: msg.role,
-                content: msg.content,
-              })),
-              { role: "user" as const, content: message.trim() },
-            ]
-
-            // Import chatbotContext dynamically
+            // Import Google Generative AI and chatbot context
+            const { GoogleGenerativeAI } = await import("@google/generative-ai")
             const { chatbotContext } = await import("./src/data/chatbotContext")
 
-            const response = await fetch("https://api.anthropic.com/v1/messages", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-api-key": apiKey,
-                "anthropic-version": "2023-06-01",
-              },
-              body: JSON.stringify({
-                model: "claude-3-5-sonnet-20241022",
-                max_tokens: 400,
-                system: chatbotContext,
-                messages,
-              }),
+            // Initialize Google Generative AI
+            const genAI = new GoogleGenerativeAI(apiKey)
+            const model = genAI.getGenerativeModel({
+              model: "gemini-1.5-flash",
+              systemInstruction: chatbotContext,
             })
 
-            if (!response.ok) {
-              const errorData = (await response.json().catch(() => ({}))) as {
-                error?: { message?: string }
-              }
-              const errorMessage =
-                errorData?.error?.message ?? `HTTP ${response.status}`
+            // Build chat history for Google's format
+            const chatHistory = validHistory.map((msg) => ({
+              role: msg.role === "assistant" ? "model" : "user",
+              parts: [{ text: msg.content }],
+            }))
 
-              console.error(
-                `Anthropic API error: ${response.status} - ${errorMessage}`,
-              )
+            // Start chat with history
+            const chat = model.startChat({
+              history: chatHistory,
+              generationConfig: {
+                maxOutputTokens: 400,
+                temperature: 0.7,
+              },
+            })
 
-              res.statusCode = 500
-              res.setHeader("Content-Type", "application/json")
-              res.end(
-                JSON.stringify({
-                  error:
-                    "AI assistant encountered an error. Please try again or use the contact form.",
-                }),
-              )
-              return
-            }
-
-            const data = (await response.json()) as {
-              content?: Array<{ type: string; text: string }>
-            }
-
-            const reply =
-              data.content?.[0]?.text ??
-              "I couldn't generate a response. Please try again."
+            // Send message and get response
+            const result = await chat.sendMessage(message.trim())
+            const response = await result.response
+            const reply = response.text()
 
             res.statusCode = 200
             res.setHeader("Content-Type", "application/json")
@@ -372,7 +346,7 @@ export default defineConfig(({ mode }) => {
   process.env.CONTACT_TO_EMAIL = env.CONTACT_TO_EMAIL
   process.env.CLOUDINARY_API_KEY = env.CLOUDINARY_API_KEY
   process.env.CLOUDINARY_API_SECRET = env.CLOUDINARY_API_SECRET
-  process.env.ANTHROPIC_API_KEY = env.ANTHROPIC_API_KEY
+  process.env.GOOGLE_API_KEY = env.GOOGLE_API_KEY
 
   return {
     plugins: [react(), tailwindcss(), devApiRoutes()],

@@ -49,7 +49,7 @@ A cinematic, production-ready developer portfolio built with React, TypeScript, 
 | Frontend | React 19, TypeScript, Vite 8, Tailwind CSS 4 |
 | UI | shadcn/ui (Radix), Lucide icons, CVA |
 | Animation | Framer Motion |
-| AI Chat | Anthropic Claude (server-side API) |
+| AI Chat | Google Gemini (server-side API) |
 | Forms | React Hook Form, Zod |
 | Media | Cloudinary (direct browser upload) |
 | API | Vercel serverless (`/api/upload`, `/api/contact`) |
@@ -62,7 +62,7 @@ A cinematic, production-ready developer portfolio built with React, TypeScript, 
 ```
 roshan-portfolio/
 ├── api/                    # Vercel serverless routes
-│   ├── chat.ts             # AI chatbot (Anthropic Claude)
+│   ├── chat.ts             # AI chatbot (Google Gemini)
 │   ├── upload.ts           # Cloudinary upload fallback
 │   └── contact.ts          # Contact form server fallback
 ├── lib/                    # Server-side helpers
