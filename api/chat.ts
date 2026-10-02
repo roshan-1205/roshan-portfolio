@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 import { chatbotContext } from "../src/data/chatbotContext"
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-const MODEL = "gemini-1.5-flash-latest"
+const MODEL = "gemini-2.5-flash"
 const MAX_MESSAGE_LENGTH = 800
 const MAX_HISTORY_MESSAGES = 12
 
