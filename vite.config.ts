@@ -85,8 +85,7 @@ function devApiRoutes(): Plugin {
             // Initialize Google Generative AI
             const genAI = new GoogleGenerativeAI(apiKey)
             const model = genAI.getGenerativeModel({
-              model: "gemini-1.5-flash",
-              systemInstruction: chatbotContext,
+              model: "gemini-1.5-flash-latest",
             })
 
             // Build chat history for Google's format
@@ -95,18 +94,12 @@ function devApiRoutes(): Plugin {
               parts: [{ text: msg.content }],
             }))
 
-            // Start chat with history
-            const chat = model.startChat({
-              history: chatHistory,
-              generationConfig: {
-                maxOutputTokens: 400,
-                temperature: 0.7,
-              },
-            })
+            // Combine system instruction with user message
+            const fullPrompt = `${chatbotContext}\n\nConversation history:\n${chatHistory.map(h => `${h.role}: ${h.parts[0].text}`).join('\n')}\n\nUser: ${message.trim()}\n\nAssistant:`
 
-            // Send message and get response
-            const result = await chat.sendMessage(message.trim())
-            const response = await result.response
+            // Generate content
+            const result = await model.generateContent(fullPrompt)
+            const response = result.response
             const reply = response.text()
 
             res.statusCode = 200

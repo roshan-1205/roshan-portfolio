@@ -3,8 +3,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai"
 import { chatbotContext } from "../src/data/chatbotContext"
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY
-const MODEL = "gemini-1.5-flash"
-const MAX_TOKENS = 400
+const MODEL = "gemini-1.5-flash-latest"
 const MAX_MESSAGE_LENGTH = 800
 const MAX_HISTORY_MESSAGES = 12
 
@@ -61,7 +60,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY)
     const model = genAI.getGenerativeModel({ 
       model: MODEL,
-      systemInstruction: chatbotContext,
     })
 
     // Build chat history for Google's format
@@ -70,18 +68,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       parts: [{ text: msg.content }],
     }))
 
-    // Start chat with history
-    const chat = model.startChat({
-      history: chatHistory,
-      generationConfig: {
-        maxOutputTokens: MAX_TOKENS,
-        temperature: 0.7,
-      },
-    })
+    // Combine system instruction with user message
+    const prompt = `${chatbotContext}\n\nConversation history:\n${chatHistory.map(h => `${h.role}: ${h.parts[0].text}`).join('\n')}\n\nUser: ${message.trim()}\n\nAssistant:`
 
-    // Send message and get response
-    const result = await chat.sendMessage(message.trim())
-    const response = await result.response
+    // Generate content
+    const result = await model.generateContent(prompt)
+    const response = result.response
     const reply = response.text()
 
     if (!reply) {
